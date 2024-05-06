@@ -1,0 +1,629 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		19875912DA067B1401E2F0280E20C82D /* SerialDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DB01CC371892F17A72FD156A9979A9 /* SerialDevice.swift */; };
+		27E2E5D6C3E65CC89B8EDC49960F2FD2 /* Pods-NuMicro ISP Programming Tool-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 263EDD932E9019CA732C9605E460CF76 /* Pods-NuMicro ISP Programming Tool-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		41582FE8B6D4AC99EEDFF0E699AFBC20 /* SerialDeviceMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866BCEB820F7D7B0F7E2049F2BF30CBC /* SerialDeviceMonitor.swift */; };
+		4268FD310F4B1168635D4FD95F2DDC49 /* USBDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 051B8C9EACDE7DBD7DB9BD49E35BAF7C /* USBDevice.swift */; };
+		5812A3A34C11115FDBFA9E5736A87A77 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1430F003D39D9906881A6AC724B7931 /* Cocoa.framework */; };
+		5D554E30AF71C7DFCCF0E19235EA6A6D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1430F003D39D9906881A6AC724B7931 /* Cocoa.framework */; };
+		6A1D4003AB666266FAE624A7FAA0214A /* Pods-NuMicro ISP Programming Tool-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C490E559FDD2EAFCF4D4ED5D5B29DC /* Pods-NuMicro ISP Programming Tool-dummy.m */; };
+		782C09D27A996C795641076DB75E14A2 /* USBDeviceSwift-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E2BCBCFEF245045E00A77AF9B236C340 /* USBDeviceSwift-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		834A2C92F19581A688C2291F64AABA69 /* HIDDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = C329087D5E6246C861EC1256BA767C17 /* HIDDevice.swift */; };
+		98A9D6FDFFFF69DC9CF6B03BE0D0FF9C /* USBDeviceSwift-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 149F623B36BF981B0B5BFA0828A4C3C6 /* USBDeviceSwift-dummy.m */; };
+		C094B649679B8E0BFE011C5E80F76826 /* USBDeviceSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = 45055A790E443BDFC5DD05C5F96FD7C8 /* USBDeviceSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F067FF3BE29A8033E77CB3C16C636AE2 /* HIDDeviceMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A0B19A626CD29BFA3A64685063E258 /* HIDDeviceMonitor.swift */; };
+		F1A21A80FEB93255EFFDC2226EFBC700 /* USBDeviceMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A436C136744B47D3FC7A9EBBFA472FAA /* USBDeviceMonitor.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		894AB0936B65760D6DECA10EF81DEDB3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 249E6CD01FDE0B27A27938C65A82728E;
+			remoteInfo = USBDeviceSwift;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		04A0B19A626CD29BFA3A64685063E258 /* HIDDeviceMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HIDDeviceMonitor.swift; path = Sources/HIDDeviceMonitor.swift; sourceTree = "<group>"; };
+		051B8C9EACDE7DBD7DB9BD49E35BAF7C /* USBDevice.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = USBDevice.swift; path = Sources/USBDevice.swift; sourceTree = "<group>"; };
+		085109839EEF8C77901DF5E201F8BF51 /* USBDeviceSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = USBDeviceSwift.debug.xcconfig; sourceTree = "<group>"; };
+		149F623B36BF981B0B5BFA0828A4C3C6 /* USBDeviceSwift-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "USBDeviceSwift-dummy.m"; sourceTree = "<group>"; };
+		2077EEC20587A04D9020BF165BA34A0A /* Pods-NuMicro ISP Programming Tool.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-NuMicro ISP Programming Tool.modulemap"; sourceTree = "<group>"; };
+		263EDD932E9019CA732C9605E460CF76 /* Pods-NuMicro ISP Programming Tool-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-NuMicro ISP Programming Tool-umbrella.h"; sourceTree = "<group>"; };
+		2C45FBD1E28F012FD82B768ED2568B75 /* Pods-NuMicro ISP Programming Tool-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-NuMicro ISP Programming Tool-Info.plist"; sourceTree = "<group>"; };
+		319438F26D337B05BE5C23234A0C3A67 /* USBDeviceSwift.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = USBDeviceSwift.modulemap; sourceTree = "<group>"; };
+		34E94AA934E7FF6085564D1AA086DE81 /* Pods-NuMicro ISP Programming Tool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-NuMicro ISP Programming Tool.debug.xcconfig"; sourceTree = "<group>"; };
+		36C490E559FDD2EAFCF4D4ED5D5B29DC /* Pods-NuMicro ISP Programming Tool-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-NuMicro ISP Programming Tool-dummy.m"; sourceTree = "<group>"; };
+		45055A790E443BDFC5DD05C5F96FD7C8 /* USBDeviceSwift.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = USBDeviceSwift.h; path = Sources/USBDeviceSwift.h; sourceTree = "<group>"; };
+		71B5558A1D4677F4DA0AB6E5F9E25182 /* USBDeviceSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = USBDeviceSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		866BCEB820F7D7B0F7E2049F2BF30CBC /* SerialDeviceMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SerialDeviceMonitor.swift; path = Sources/SerialDeviceMonitor.swift; sourceTree = "<group>"; };
+		88D07F873A1D84292ECED895E21A4167 /* USBDeviceSwift-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "USBDeviceSwift-Info.plist"; sourceTree = "<group>"; };
+		95A4F8FC61C193993421B5480E24507B /* Pods-NuMicro ISP Programming Tool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-NuMicro ISP Programming Tool.release.xcconfig"; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A436C136744B47D3FC7A9EBBFA472FAA /* USBDeviceMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = USBDeviceMonitor.swift; path = Sources/USBDeviceMonitor.swift; sourceTree = "<group>"; };
+		B0C1A060F3AB48554F6F219A3873357B /* Pods-NuMicro ISP Programming Tool-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-NuMicro ISP Programming Tool-acknowledgements.markdown"; sourceTree = "<group>"; };
+		B13B4343B36A20D30BDB7F362245CEE5 /* USBDeviceSwift-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "USBDeviceSwift-prefix.pch"; sourceTree = "<group>"; };
+		B64E281B38921C5CA7FA0F68A5CA6607 /* Pods_NuMicro_ISP_Programming_Tool.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NuMicro_ISP_Programming_Tool.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA48F17FF3820CBF2C7F5F1F78C30F7F /* USBDeviceSwift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = USBDeviceSwift.release.xcconfig; sourceTree = "<group>"; };
+		C1430F003D39D9906881A6AC724B7931 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		C14E48649CA04F84D675BE86D8642E1F /* Pods-NuMicro ISP Programming Tool-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-NuMicro ISP Programming Tool-acknowledgements.plist"; sourceTree = "<group>"; };
+		C1DB01CC371892F17A72FD156A9979A9 /* SerialDevice.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SerialDevice.swift; path = Sources/SerialDevice.swift; sourceTree = "<group>"; };
+		C329087D5E6246C861EC1256BA767C17 /* HIDDevice.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HIDDevice.swift; path = Sources/HIDDevice.swift; sourceTree = "<group>"; };
+		E2BCBCFEF245045E00A77AF9B236C340 /* USBDeviceSwift-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "USBDeviceSwift-umbrella.h"; sourceTree = "<group>"; };
+		EFF413D37D642983471A93E85B3A46E2 /* Pods-NuMicro ISP Programming Tool-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-NuMicro ISP Programming Tool-frameworks.sh"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4A817A2B54A65DA630FC8B185B4E801B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D554E30AF71C7DFCCF0E19235EA6A6D /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DA117B220862D563D6C273A14451B8B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5812A3A34C11115FDBFA9E5736A87A77 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		46FCACA7B9D7867DFE0623BE3FE503FF /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				E28EF1E7CB03247F86FBA75C28CEFD5E /* Pods-NuMicro ISP Programming Tool */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		6249C1CBD3696BC7142C0E85A62CF050 /* USBDeviceSwift */ = {
+			isa = PBXGroup;
+			children = (
+				C329087D5E6246C861EC1256BA767C17 /* HIDDevice.swift */,
+				04A0B19A626CD29BFA3A64685063E258 /* HIDDeviceMonitor.swift */,
+				C1DB01CC371892F17A72FD156A9979A9 /* SerialDevice.swift */,
+				866BCEB820F7D7B0F7E2049F2BF30CBC /* SerialDeviceMonitor.swift */,
+				051B8C9EACDE7DBD7DB9BD49E35BAF7C /* USBDevice.swift */,
+				A436C136744B47D3FC7A9EBBFA472FAA /* USBDeviceMonitor.swift */,
+				45055A790E443BDFC5DD05C5F96FD7C8 /* USBDeviceSwift.h */,
+				74E0C92A92A8CEDD4823E96D0B73C974 /* Support Files */,
+			);
+			path = USBDeviceSwift;
+			sourceTree = "<group>";
+		};
+		74E0C92A92A8CEDD4823E96D0B73C974 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				319438F26D337B05BE5C23234A0C3A67 /* USBDeviceSwift.modulemap */,
+				149F623B36BF981B0B5BFA0828A4C3C6 /* USBDeviceSwift-dummy.m */,
+				88D07F873A1D84292ECED895E21A4167 /* USBDeviceSwift-Info.plist */,
+				B13B4343B36A20D30BDB7F362245CEE5 /* USBDeviceSwift-prefix.pch */,
+				E2BCBCFEF245045E00A77AF9B236C340 /* USBDeviceSwift-umbrella.h */,
+				085109839EEF8C77901DF5E201F8BF51 /* USBDeviceSwift.debug.xcconfig */,
+				BA48F17FF3820CBF2C7F5F1F78C30F7F /* USBDeviceSwift.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/USBDeviceSwift";
+			sourceTree = "<group>";
+		};
+		CC291F5C6A36C3DFBA1C2C84AEE768B2 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6249C1CBD3696BC7142C0E85A62CF050 /* USBDeviceSwift */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				E0A1E60606E0BF6E2E10F1F01350DFE8 /* Frameworks */,
+				CC291F5C6A36C3DFBA1C2C84AEE768B2 /* Pods */,
+				DEDBA94B77B2D28036E6A35D1CA5C5D7 /* Products */,
+				46FCACA7B9D7867DFE0623BE3FE503FF /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		DEDBA94B77B2D28036E6A35D1CA5C5D7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B64E281B38921C5CA7FA0F68A5CA6607 /* Pods_NuMicro_ISP_Programming_Tool.framework */,
+				71B5558A1D4677F4DA0AB6E5F9E25182 /* USBDeviceSwift.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E0A1E60606E0BF6E2E10F1F01350DFE8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E2A8756CA1FF5258A0344D53C5C60EC1 /* OS X */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E28EF1E7CB03247F86FBA75C28CEFD5E /* Pods-NuMicro ISP Programming Tool */ = {
+			isa = PBXGroup;
+			children = (
+				2077EEC20587A04D9020BF165BA34A0A /* Pods-NuMicro ISP Programming Tool.modulemap */,
+				B0C1A060F3AB48554F6F219A3873357B /* Pods-NuMicro ISP Programming Tool-acknowledgements.markdown */,
+				C14E48649CA04F84D675BE86D8642E1F /* Pods-NuMicro ISP Programming Tool-acknowledgements.plist */,
+				36C490E559FDD2EAFCF4D4ED5D5B29DC /* Pods-NuMicro ISP Programming Tool-dummy.m */,
+				EFF413D37D642983471A93E85B3A46E2 /* Pods-NuMicro ISP Programming Tool-frameworks.sh */,
+				2C45FBD1E28F012FD82B768ED2568B75 /* Pods-NuMicro ISP Programming Tool-Info.plist */,
+				263EDD932E9019CA732C9605E460CF76 /* Pods-NuMicro ISP Programming Tool-umbrella.h */,
+				34E94AA934E7FF6085564D1AA086DE81 /* Pods-NuMicro ISP Programming Tool.debug.xcconfig */,
+				95A4F8FC61C193993421B5480E24507B /* Pods-NuMicro ISP Programming Tool.release.xcconfig */,
+			);
+			name = "Pods-NuMicro ISP Programming Tool";
+			path = "Target Support Files/Pods-NuMicro ISP Programming Tool";
+			sourceTree = "<group>";
+		};
+		E2A8756CA1FF5258A0344D53C5C60EC1 /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				C1430F003D39D9906881A6AC724B7931 /* Cocoa.framework */,
+			);
+			name = "OS X";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		744B238FBD96E0771307449DE12D1A84 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27E2E5D6C3E65CC89B8EDC49960F2FD2 /* Pods-NuMicro ISP Programming Tool-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A7360C432484517705CFB1BAF26B3CD7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C094B649679B8E0BFE011C5E80F76826 /* USBDeviceSwift.h in Headers */,
+				782C09D27A996C795641076DB75E14A2 /* USBDeviceSwift-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		249E6CD01FDE0B27A27938C65A82728E /* USBDeviceSwift */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8F4B17EF1FDD80C4A7A45EEC641D2EDF /* Build configuration list for PBXNativeTarget "USBDeviceSwift" */;
+			buildPhases = (
+				A7360C432484517705CFB1BAF26B3CD7 /* Headers */,
+				156F394770FF88B4E8074081EDE1E1EF /* Sources */,
+				4A817A2B54A65DA630FC8B185B4E801B /* Frameworks */,
+				7E681BC39FA29CDAA02D7851A22C1CE2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = USBDeviceSwift;
+			productName = USBDeviceSwift;
+			productReference = 71B5558A1D4677F4DA0AB6E5F9E25182 /* USBDeviceSwift.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		A64AC069950AD8D69AD7290D938F9DDD /* Pods-NuMicro ISP Programming Tool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 23E99F43C300A94E1A6CB1BC4CEDEAE5 /* Build configuration list for PBXNativeTarget "Pods-NuMicro ISP Programming Tool" */;
+			buildPhases = (
+				744B238FBD96E0771307449DE12D1A84 /* Headers */,
+				602F89AD3FF6FD0DC8846C0063F28BC2 /* Sources */,
+				5DA117B220862D563D6C273A14451B8B /* Frameworks */,
+				AF6926939CF03BBA49E664FF233AF7C6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				09140E408A77A0BA07662C36154F2595 /* PBXTargetDependency */,
+			);
+			name = "Pods-NuMicro ISP Programming Tool";
+			productName = Pods_NuMicro_ISP_Programming_Tool;
+			productReference = B64E281B38921C5CA7FA0F68A5CA6607 /* Pods_NuMicro_ISP_Programming_Tool.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1300;
+				LastUpgradeCheck = 1300;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = DEDBA94B77B2D28036E6A35D1CA5C5D7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A64AC069950AD8D69AD7290D938F9DDD /* Pods-NuMicro ISP Programming Tool */,
+				249E6CD01FDE0B27A27938C65A82728E /* USBDeviceSwift */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7E681BC39FA29CDAA02D7851A22C1CE2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AF6926939CF03BBA49E664FF233AF7C6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		156F394770FF88B4E8074081EDE1E1EF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				834A2C92F19581A688C2291F64AABA69 /* HIDDevice.swift in Sources */,
+				F067FF3BE29A8033E77CB3C16C636AE2 /* HIDDeviceMonitor.swift in Sources */,
+				19875912DA067B1401E2F0280E20C82D /* SerialDevice.swift in Sources */,
+				41582FE8B6D4AC99EEDFF0E699AFBC20 /* SerialDeviceMonitor.swift in Sources */,
+				4268FD310F4B1168635D4FD95F2DDC49 /* USBDevice.swift in Sources */,
+				F1A21A80FEB93255EFFDC2226EFBC700 /* USBDeviceMonitor.swift in Sources */,
+				98A9D6FDFFFF69DC9CF6B03BE0D0FF9C /* USBDeviceSwift-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		602F89AD3FF6FD0DC8846C0063F28BC2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A1D4003AB666266FAE624A7FAA0214A /* Pods-NuMicro ISP Programming Tool-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		09140E408A77A0BA07662C36154F2595 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = USBDeviceSwift;
+			target = 249E6CD01FDE0B27A27938C65A82728E /* USBDeviceSwift */;
+			targetProxy = 894AB0936B65760D6DECA10EF81DEDB3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0992CC3F24A9DB5E946EDE9A1913B71A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		0DB491E3EB5F91B602DA25F67057BBDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 95A4F8FC61C193993421B5480E24507B /* Pods-NuMicro ISP Programming Tool.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-NuMicro ISP Programming Tool/Pods-NuMicro ISP Programming Tool-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MODULEMAP_FILE = "Target Support Files/Pods-NuMicro ISP Programming Tool/Pods-NuMicro ISP Programming Tool.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		70A2F8E02887D230F8E39B54B87C8DFE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 085109839EEF8C77901DF5E201F8BF51 /* USBDeviceSwift.debug.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/USBDeviceSwift/USBDeviceSwift-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/USBDeviceSwift/USBDeviceSwift-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MODULEMAP_FILE = "Target Support Files/USBDeviceSwift/USBDeviceSwift.modulemap";
+				PRODUCT_MODULE_NAME = USBDeviceSwift;
+				PRODUCT_NAME = USBDeviceSwift;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		781969965C8537D7698A90447619719E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BA48F17FF3820CBF2C7F5F1F78C30F7F /* USBDeviceSwift.release.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/USBDeviceSwift/USBDeviceSwift-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/USBDeviceSwift/USBDeviceSwift-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MODULEMAP_FILE = "Target Support Files/USBDeviceSwift/USBDeviceSwift.modulemap";
+				PRODUCT_MODULE_NAME = USBDeviceSwift;
+				PRODUCT_NAME = USBDeviceSwift;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		F464707F7EDA20BE99058C56CAE170DE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		FEA83861D0A5BC61CC0C9D87B46DF3C4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 34E94AA934E7FF6085564D1AA086DE81 /* Pods-NuMicro ISP Programming Tool.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-NuMicro ISP Programming Tool/Pods-NuMicro ISP Programming Tool-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MODULEMAP_FILE = "Target Support Files/Pods-NuMicro ISP Programming Tool/Pods-NuMicro ISP Programming Tool.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		23E99F43C300A94E1A6CB1BC4CEDEAE5 /* Build configuration list for PBXNativeTarget "Pods-NuMicro ISP Programming Tool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FEA83861D0A5BC61CC0C9D87B46DF3C4 /* Debug */,
+				0DB491E3EB5F91B602DA25F67057BBDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F464707F7EDA20BE99058C56CAE170DE /* Debug */,
+				0992CC3F24A9DB5E946EDE9A1913B71A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8F4B17EF1FDD80C4A7A45EEC641D2EDF /* Build configuration list for PBXNativeTarget "USBDeviceSwift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70A2F8E02887D230F8E39B54B87C8DFE /* Debug */,
+				781969965C8537D7698A90447619719E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}

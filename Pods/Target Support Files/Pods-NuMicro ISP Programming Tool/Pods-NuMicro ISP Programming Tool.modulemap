@@ -1,0 +1,6 @@
+framework module Pods_NuMicro_ISP_Programming_Tool {
+  umbrella header "Pods-NuMicro ISP Programming Tool-umbrella.h"
+
+  export *
+  module * { export * }
+}

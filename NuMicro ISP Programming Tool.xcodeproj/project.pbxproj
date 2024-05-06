@@ -1,0 +1,500 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		33582D1E8EDB642A1F1D4592 /* Pods_NuMicro_ISP_Programming_Tool.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EFDA9CCCAF235CC65B446FA /* Pods_NuMicro_ISP_Programming_Tool.framework */; };
+		734254392BAC34D000378BA7 /* ISPCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734254382BAC34D000378BA7 /* ISPCommands.swift */; };
+		73B662C22BA2F10A00782B90 /* RFDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B662C12BA2F10A00782B90 /* RFDevice.swift */; };
+		73B6645D2BC66B22008735D4 /* JsonFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B6645C2BC66B22008735D4 /* JsonFileManager.swift */; };
+		73B664652BC6735B008735D4 /* proj_m251.json in Resources */ = {isa = PBXBuildFile; fileRef = 73B6645F2BC6735B008735D4 /* proj_m251.json */; };
+		73B664662BC6735B008735D4 /* chip_pdid.json in Resources */ = {isa = PBXBuildFile; fileRef = 73B664602BC6735B008735D4 /* chip_pdid.json */; };
+		73B664672BC6735B008735D4 /* proj_m2351.json in Resources */ = {isa = PBXBuildFile; fileRef = 73B664612BC6735B008735D4 /* proj_m2351.json */; };
+		73B664682BC6735B008735D4 /* proj_nuc121.json in Resources */ = {isa = PBXBuildFile; fileRef = 73B664622BC6735B008735D4 /* proj_nuc121.json */; };
+		73B664692BC6735B008735D4 /* proj_nuc400ae.json in Resources */ = {isa = PBXBuildFile; fileRef = 73B664632BC6735B008735D4 /* proj_nuc400ae.json */; };
+		73B6646A2BC6735B008735D4 /* chip_info.json in Resources */ = {isa = PBXBuildFile; fileRef = 73B664642BC6735B008735D4 /* chip_info.json */; };
+		73B6646E2BC69094008735D4 /* ISPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B6646D2BC69094008735D4 /* ISPManager.swift */; };
+		73B664702BD25CED008735D4 /* ProgressAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B6646F2BD25CED008735D4 /* ProgressAlert.swift */; };
+		73B664722BD64390008735D4 /* AutoResizingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B664712BD64390008735D4 /* AutoResizingTextField.swift */; };
+		73B664762BD656A5008735D4 /* MyTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B664752BD656A5008735D4 /* MyTabViewController.swift */; };
+		73B664782BD78D0E008735D4 /* CustomTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B664772BD78D0E008735D4 /* CustomTableCellView.swift */; };
+		73B6647A2BD8DB44008735D4 /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B664792BD8DB44008735D4 /* ConfigManager.swift */; };
+		73B6647C2BD8DC3B008735D4 /* ConfigJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B6647B2BD8DC3B008735D4 /* ConfigJson.swift */; };
+		73CAF4C82B97238A00062A5B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CAF4C72B97238A00062A5B /* AppDelegate.swift */; };
+		73CAF4CA2B97238A00062A5B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CAF4C92B97238A00062A5B /* ViewController.swift */; };
+		73CAF4CC2B97238B00062A5B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 73CAF4CB2B97238B00062A5B /* Assets.xcassets */; };
+		73CAF4CF2B97238B00062A5B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 73CAF4CD2B97238B00062A5B /* Main.storyboard */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0DA875B7448D2D8201DB8A7D /* Pods-NuMicro ISP Programming Tool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NuMicro ISP Programming Tool.release.xcconfig"; path = "Target Support Files/Pods-NuMicro ISP Programming Tool/Pods-NuMicro ISP Programming Tool.release.xcconfig"; sourceTree = "<group>"; };
+		3B2BC9EDD4DEB154370C8225 /* Pods-NuMicro ISP Programming Tool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NuMicro ISP Programming Tool.debug.xcconfig"; path = "Target Support Files/Pods-NuMicro ISP Programming Tool/Pods-NuMicro ISP Programming Tool.debug.xcconfig"; sourceTree = "<group>"; };
+		6EFDA9CCCAF235CC65B446FA /* Pods_NuMicro_ISP_Programming_Tool.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NuMicro_ISP_Programming_Tool.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		734254382BAC34D000378BA7 /* ISPCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ISPCommands.swift; sourceTree = "<group>"; };
+		73B662C12BA2F10A00782B90 /* RFDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RFDevice.swift; sourceTree = "<group>"; };
+		73B6645C2BC66B22008735D4 /* JsonFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonFileManager.swift; sourceTree = "<group>"; };
+		73B6645F2BC6735B008735D4 /* proj_m251.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = proj_m251.json; sourceTree = "<group>"; };
+		73B664602BC6735B008735D4 /* chip_pdid.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = chip_pdid.json; sourceTree = "<group>"; };
+		73B664612BC6735B008735D4 /* proj_m2351.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = proj_m2351.json; sourceTree = "<group>"; };
+		73B664622BC6735B008735D4 /* proj_nuc121.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = proj_nuc121.json; sourceTree = "<group>"; };
+		73B664632BC6735B008735D4 /* proj_nuc400ae.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = proj_nuc400ae.json; sourceTree = "<group>"; };
+		73B664642BC6735B008735D4 /* chip_info.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = chip_info.json; sourceTree = "<group>"; };
+		73B6646D2BC69094008735D4 /* ISPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ISPManager.swift; sourceTree = "<group>"; };
+		73B6646F2BD25CED008735D4 /* ProgressAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressAlert.swift; sourceTree = "<group>"; };
+		73B664712BD64390008735D4 /* AutoResizingTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoResizingTextField.swift; sourceTree = "<group>"; };
+		73B664752BD656A5008735D4 /* MyTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTabViewController.swift; sourceTree = "<group>"; };
+		73B664772BD78D0E008735D4 /* CustomTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableCellView.swift; sourceTree = "<group>"; };
+		73B664792BD8DB44008735D4 /* ConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
+		73B6647B2BD8DC3B008735D4 /* ConfigJson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigJson.swift; sourceTree = "<group>"; };
+		73CAF4C42B97238A00062A5B /* NuMicro ISP Programming Tool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NuMicro ISP Programming Tool.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		73CAF4C72B97238A00062A5B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		73CAF4C92B97238A00062A5B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		73CAF4CB2B97238B00062A5B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		73CAF4CE2B97238B00062A5B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		73CAF4D02B97238B00062A5B /* NuMicro_ISP_Programming_Tool.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NuMicro_ISP_Programming_Tool.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		73CAF4C12B97238A00062A5B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				33582D1E8EDB642A1F1D4592 /* Pods_NuMicro_ISP_Programming_Tool.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		73B6645E2BC672EF008735D4 /* jsonFiles */ = {
+			isa = PBXGroup;
+			children = (
+				73B664642BC6735B008735D4 /* chip_info.json */,
+				73B664602BC6735B008735D4 /* chip_pdid.json */,
+				73B6645F2BC6735B008735D4 /* proj_m251.json */,
+				73B664612BC6735B008735D4 /* proj_m2351.json */,
+				73B664622BC6735B008735D4 /* proj_nuc121.json */,
+				73B664632BC6735B008735D4 /* proj_nuc400ae.json */,
+			);
+			path = jsonFiles;
+			sourceTree = "<group>";
+		};
+		73B6646C2BC68F47008735D4 /* ISP */ = {
+			isa = PBXGroup;
+			children = (
+				734254382BAC34D000378BA7 /* ISPCommands.swift */,
+				73B662C12BA2F10A00782B90 /* RFDevice.swift */,
+				73B6646D2BC69094008735D4 /* ISPManager.swift */,
+				73B664792BD8DB44008735D4 /* ConfigManager.swift */,
+				73B6647B2BD8DC3B008735D4 /* ConfigJson.swift */,
+			);
+			path = ISP;
+			sourceTree = "<group>";
+		};
+		73CAF4BB2B97238A00062A5B = {
+			isa = PBXGroup;
+			children = (
+				73CAF4C62B97238A00062A5B /* NuMicro ISP Programming Tool */,
+				73CAF4C52B97238A00062A5B /* Products */,
+				EA3E88F277C9FDC1E04A53A9 /* Pods */,
+				98B82271252A00E2722036FE /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		73CAF4C52B97238A00062A5B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				73CAF4C42B97238A00062A5B /* NuMicro ISP Programming Tool.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		73CAF4C62B97238A00062A5B /* NuMicro ISP Programming Tool */ = {
+			isa = PBXGroup;
+			children = (
+				73B6646C2BC68F47008735D4 /* ISP */,
+				73B6645E2BC672EF008735D4 /* jsonFiles */,
+				73CAF4C92B97238A00062A5B /* ViewController.swift */,
+				73B6645C2BC66B22008735D4 /* JsonFileManager.swift */,
+				73CAF4C72B97238A00062A5B /* AppDelegate.swift */,
+				73CAF4CB2B97238B00062A5B /* Assets.xcassets */,
+				73CAF4CD2B97238B00062A5B /* Main.storyboard */,
+				73CAF4D02B97238B00062A5B /* NuMicro_ISP_Programming_Tool.entitlements */,
+				73B6646F2BD25CED008735D4 /* ProgressAlert.swift */,
+				73B664712BD64390008735D4 /* AutoResizingTextField.swift */,
+				73B664752BD656A5008735D4 /* MyTabViewController.swift */,
+				73B664772BD78D0E008735D4 /* CustomTableCellView.swift */,
+			);
+			path = "NuMicro ISP Programming Tool";
+			sourceTree = "<group>";
+		};
+		98B82271252A00E2722036FE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6EFDA9CCCAF235CC65B446FA /* Pods_NuMicro_ISP_Programming_Tool.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EA3E88F277C9FDC1E04A53A9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3B2BC9EDD4DEB154370C8225 /* Pods-NuMicro ISP Programming Tool.debug.xcconfig */,
+				0DA875B7448D2D8201DB8A7D /* Pods-NuMicro ISP Programming Tool.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		73CAF4C32B97238A00062A5B /* NuMicro ISP Programming Tool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 73CAF4D32B97238B00062A5B /* Build configuration list for PBXNativeTarget "NuMicro ISP Programming Tool" */;
+			buildPhases = (
+				51BCDC0D41C3C99E16664E58 /* [CP] Check Pods Manifest.lock */,
+				73CAF4C02B97238A00062A5B /* Sources */,
+				73CAF4C12B97238A00062A5B /* Frameworks */,
+				73CAF4C22B97238A00062A5B /* Resources */,
+				DA7C8FB2AE8C0A5670EFE771 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "NuMicro ISP Programming Tool";
+			productName = "NuMicro ISP Programming Tool";
+			productReference = 73CAF4C42B97238A00062A5B /* NuMicro ISP Programming Tool.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		73CAF4BC2B97238A00062A5B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1430;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					73CAF4C32B97238A00062A5B = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 73CAF4BF2B97238A00062A5B /* Build configuration list for PBXProject "NuMicro ISP Programming Tool" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 73CAF4BB2B97238A00062A5B;
+			productRefGroup = 73CAF4C52B97238A00062A5B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				73CAF4C32B97238A00062A5B /* NuMicro ISP Programming Tool */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		73CAF4C22B97238A00062A5B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				73B664672BC6735B008735D4 /* proj_m2351.json in Resources */,
+				73B664652BC6735B008735D4 /* proj_m251.json in Resources */,
+				73B664682BC6735B008735D4 /* proj_nuc121.json in Resources */,
+				73CAF4CC2B97238B00062A5B /* Assets.xcassets in Resources */,
+				73B664662BC6735B008735D4 /* chip_pdid.json in Resources */,
+				73B6646A2BC6735B008735D4 /* chip_info.json in Resources */,
+				73B664692BC6735B008735D4 /* proj_nuc400ae.json in Resources */,
+				73CAF4CF2B97238B00062A5B /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		51BCDC0D41C3C99E16664E58 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-NuMicro ISP Programming Tool-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DA7C8FB2AE8C0A5670EFE771 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-NuMicro ISP Programming Tool/Pods-NuMicro ISP Programming Tool-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-NuMicro ISP Programming Tool/Pods-NuMicro ISP Programming Tool-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NuMicro ISP Programming Tool/Pods-NuMicro ISP Programming Tool-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		73CAF4C02B97238A00062A5B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				73B6645D2BC66B22008735D4 /* JsonFileManager.swift in Sources */,
+				73B6647A2BD8DB44008735D4 /* ConfigManager.swift in Sources */,
+				73B662C22BA2F10A00782B90 /* RFDevice.swift in Sources */,
+				73B6646E2BC69094008735D4 /* ISPManager.swift in Sources */,
+				73B664722BD64390008735D4 /* AutoResizingTextField.swift in Sources */,
+				73CAF4CA2B97238A00062A5B /* ViewController.swift in Sources */,
+				73B664702BD25CED008735D4 /* ProgressAlert.swift in Sources */,
+				73B664782BD78D0E008735D4 /* CustomTableCellView.swift in Sources */,
+				734254392BAC34D000378BA7 /* ISPCommands.swift in Sources */,
+				73B664762BD656A5008735D4 /* MyTabViewController.swift in Sources */,
+				73CAF4C82B97238A00062A5B /* AppDelegate.swift in Sources */,
+				73B6647C2BD8DC3B008735D4 /* ConfigJson.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		73CAF4CD2B97238B00062A5B /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				73CAF4CE2B97238B00062A5B /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		73CAF4D12B97238B00062A5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		73CAF4D22B97238B00062A5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		73CAF4D42B97238B00062A5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3B2BC9EDD4DEB154370C8225 /* Pods-NuMicro ISP Programming Tool.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "NuMicro ISP Programming Tool/NuMicro_ISP_Programming_Tool.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XZ7PL3RVBP;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "NuMicro ISP Programming Tool";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "nuvoton.com.NuMicro-ISP-Programming-Tool";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		73CAF4D52B97238B00062A5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0DA875B7448D2D8201DB8A7D /* Pods-NuMicro ISP Programming Tool.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "NuMicro ISP Programming Tool/NuMicro_ISP_Programming_Tool.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XZ7PL3RVBP;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "NuMicro ISP Programming Tool";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "nuvoton.com.NuMicro-ISP-Programming-Tool";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		73CAF4BF2B97238A00062A5B /* Build configuration list for PBXProject "NuMicro ISP Programming Tool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73CAF4D12B97238B00062A5B /* Debug */,
+				73CAF4D22B97238B00062A5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		73CAF4D32B97238B00062A5B /* Build configuration list for PBXNativeTarget "NuMicro ISP Programming Tool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73CAF4D42B97238B00062A5B /* Debug */,
+				73CAF4D52B97238B00062A5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 73CAF4BC2B97238A00062A5B /* Project object */;
+}
