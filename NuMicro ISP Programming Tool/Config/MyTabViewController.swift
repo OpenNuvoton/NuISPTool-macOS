@@ -11,14 +11,33 @@ import Cocoa
 
 class MyTabViewController: NSViewController,NSTableViewDelegate,NSTableViewDataSource {
     
+    @IBOutlet weak var Config0_Text: NSTextField!
+    @IBOutlet weak var Config1_Text: NSTextField!
+    @IBOutlet weak var Config2_Text: NSTextField!
+    @IBOutlet weak var Config3_Text: NSTextField!
+    @IBOutlet weak var Config4_Text: NSTextField!
+    @IBOutlet weak var Config5_Text: NSTextField!
+    @IBOutlet weak var Config6_Text: NSTextField!
+    @IBOutlet weak var Config7_Text: NSTextField!
+    @IBOutlet weak var Config8_Text: NSTextField!
+    @IBOutlet weak var Config9_Text: NSTextField!
+    @IBOutlet weak var Config10_Text: NSTextField!
+    @IBOutlet weak var Config11_Text: NSTextField!
+
+    @IBOutlet var configTextFields: [NSTextField]!
     
     @IBOutlet weak var tableView: NSTableView!
     
     var configList: [SubConfig] = []
     var configList_Original: [SubConfig] = []
+    var configTextFields_copy: [String] = Array(repeating: "", count: 12)
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // 將 configTextFields 連接到 Interface Builder 中的對應 NSTextField
+        configTextFields = [Config0_Text, Config1_Text, Config2_Text, Config3_Text, Config4_Text, Config5_Text, Config6_Text, Config7_Text, Config8_Text, Config9_Text, Config10_Text, Config11_Text]
+
         
         // Do any additional setup after loading the view.
         tableView.delegate = self
@@ -27,6 +46,21 @@ class MyTabViewController: NSViewController,NSTableViewDelegate,NSTableViewDataS
         
         self.readConfig()
         
+    }
+    
+    func updateConfigText(restBf:[UInt8]) {
+        for i in 0..<configTextFields.count {
+            let displayConfig = ISPCommandTool.toDisplayComfig(readBuffer: restBf, configNum: i)
+            configTextFields[i].stringValue = "0x\(displayConfig)"
+        }
+        
+
+        // 複製 configTextFields
+            for i in 0..<configTextFields.count{
+                configTextFields_copy[i] = configTextFields[i].stringValue
+        }
+   
+
     }
     
     func readConfig() {
@@ -43,6 +77,8 @@ class MyTabViewController: NSViewController,NSTableViewDelegate,NSTableViewDataS
             self.configList = self.configList_Original.map { $0 }//複製一份
             
             self.tableView.reloadData()
+            
+            self.updateConfigText(restBf: restBf!)
         }
         
     }
@@ -86,8 +122,9 @@ class MyTabViewController: NSViewController,NSTableViewDelegate,NSTableViewDataS
         
         let response = alert.runModal()
         if response == .alertFirstButtonReturn { // OK button
-            ConfigManager.shared.getConfigs(configList: self.configList) { config0, config1, config2, config3 in
-                ISPManager.shared.sendCMD_UPDATE_CONFIG(config_0: config0, config_1: config1, config_2: config2, config_3: config3) { restBf, isChecksum, isTimeout in
+        
+            ConfigManager.shared.getConfigs(configList: self.configList) { configUInts in
+                ISPManager.shared.sendCMD_UPDATE_CONFIG(configs: configUInts) { restBf, isChecksum, isTimeout in
                     
                     if(restBf != nil){
                         let completionAlert = NSAlert()
@@ -179,7 +216,24 @@ class MyTabViewController: NSViewController,NSTableViewDelegate,NSTableViewDataS
             }
         }
         
+        ConfigManager.shared.getConfigs(configList: self.configList) { configUInts in
+          
+            for i in 0..<configUInts.count{
+//                print("\(self.copiedConfigTextFields[i].stringValue )    , \(String(format: "0x%08X", configUInts[i]))")
+                if(self.configTextFields_copy[i] != String(format: "0x%08X", configUInts[i])){
+                    self.configTextFields[i].textColor = .red
+                    self.configTextFields[i].stringValue = "\(String(format: "0x%08X", configUInts[i]))"
+                }else{
+                    self.configTextFields[i].textColor = .black
+                    self.configTextFields[i].stringValue = "\(String(format: "0x%08X", configUInts[i]))"
+                }
+            }
+        }
+        
         AppDelegate.print("Row \(row) index:\(self.configList[row].valuesIndex!)  Selected values: <\(self.configList[row].values)>")
         AppDelegate.print("subConfigs[0].values:\(ConfigManager.CONFIG_JSON_DATA.subConfigSets[3].subConfigs[0].values)")
     }
+    
+    
+    
 }

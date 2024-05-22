@@ -33,7 +33,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     public static func print(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-        let isPrint = false
+        let isPrint = true
         if(isPrint == true){
             let prefix = "[MyApp]"
             Swift.print(prefix, terminator: separator)

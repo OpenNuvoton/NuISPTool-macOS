@@ -24,6 +24,7 @@ enum ViewStase: UInt8 {
     case viewDidLoad = 0
     case startBurn = 1
     case connected = 2
+    case connected_NoConfigJson = 3
 }
 
 class ViewController: NSViewController {
@@ -41,7 +42,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var APROM_FileData_Text: NSTextView!
     @IBOutlet weak var EraseAll_Burn_check: NSButton!
     @IBOutlet weak var RestRun_Burn_Check: NSButton!
-//    @IBOutlet weak var Config_Burn_Check: NSButton!
+    //    @IBOutlet weak var Config_Burn_Check: NSButton!
     @IBOutlet weak var APROM_Burn_Check: NSButton!
     @IBOutlet weak var DataFlash_Burn_Check: NSButton!
     @IBOutlet weak var StartBurn_Button: NSButton!
@@ -50,13 +51,34 @@ class ViewController: NSViewController {
     @IBOutlet weak var APROM_Button: NSButton!
     @IBOutlet weak var Progress: NSProgressIndicator!
     
-    @IBOutlet weak var config_0_Label: NSTextField!
-    @IBOutlet weak var config_1_Label: NSTextField!
-    @IBOutlet weak var config_2_Label: NSTextField!
-    @IBOutlet weak var config_3_Label: NSTextField!
- 
     @IBOutlet weak var ProgressNum_label: NSTextField!
     @IBOutlet weak var ProgressInfo_label: NSTextField!
+    
+    @IBOutlet weak var Radio8bits: NSButton!
+    @IBOutlet weak var Radio16bits: NSButton!
+    @IBOutlet weak var Radio32bits: NSButton!
+    
+    @IBOutlet weak var configTitle0123: NSTextField!
+    @IBOutlet weak var ConfigTitle4567: NSTextField!
+    @IBOutlet weak var ConfigTitle891011: NSTextField!
+    @IBOutlet weak var ConfigInfo_label: NSTextField!
+    @IBOutlet weak var Config0: NSButton!
+    @IBOutlet weak var Config1: NSButton!
+    @IBOutlet weak var Config2: NSButton!
+    @IBOutlet weak var Config3: NSButton!
+    @IBOutlet weak var Config4: NSButton!
+    @IBOutlet weak var Config5: NSButton!
+    @IBOutlet weak var Config6: NSButton!
+    @IBOutlet weak var Config7: NSButton!
+    @IBOutlet weak var Config8: NSButton!
+    @IBOutlet weak var Config9: NSButton!
+    @IBOutlet weak var Config10: NSButton!
+    @IBOutlet weak var Config11: NSButton!
+    //    @IBOutlet weak var Config12: NSButton!
+    //    @IBOutlet weak var Config13: NSButton!
+    //    @IBOutlet weak var Config14: NSButton!
+    //    @IBOutlet weak var Config15: NSButton!
+    @IBOutlet var configButtons: [NSButton]!
     
     // MARK: - 宣告
     var INTERFACE_TYPE : NulinkInterfaceType = .usb
@@ -66,9 +88,21 @@ class ViewController: NSViewController {
     var apromMaxSize : Int = 0
     var dataFlashBinData : Data? = nil
     var dataFlashMaxSize : Int = 0
+    var nowRadio : Int = 8
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // 將 configButtons 連接到 Interface Builder 中的對應按鈕
+        configButtons = [Config0, Config1, Config2, Config3, Config4, Config5, Config6, Config7, Config8, Config9, Config10, Config11]
+        // 為每個按鈕添加動作方法
+        for button in configButtons {
+            button.target = self
+            button.action = #selector(buttonClicked(_:))
+        }
+        
+        self.APROM_FileData_Text.font = NSFont.monospacedSystemFont(ofSize: 12, weight: .regular)
+        self.DataFlash_FileData_Text.font = NSFont.monospacedSystemFont(ofSize: 12, weight: .regular)
         
         let ispManager = ISPManager.shared
         
@@ -78,7 +112,6 @@ class ViewController: NSViewController {
         //        NotificationCenter.default.addObserver(self, selector: #selector(self.hidReadData), name: .HIDDeviceDataReceived, object: nil)
         // 監聽 MyTabViewControllerClosed 通知
         NotificationCenter.default.addObserver(self, selector: #selector(tabViewClosed), name: NSNotification.Name("MyTabViewClosed"), object: nil)
-          
         
         self.setView(stase: .viewDidLoad)
         
@@ -93,15 +126,7 @@ class ViewController: NSViewController {
                 return
             }
             
-            let displayConfig0 = ISPCommandTool.toDisplayComfig0(readBuffer: restBf!)
-            let displayConfig1 = ISPCommandTool.toDisplayComfig1(readBuffer: restBf!)
-            let displayConfig2 = ISPCommandTool.toDisplayComfig2(readBuffer: restBf!)
-            let displayConfig3 = ISPCommandTool.toDisplayComfig3(readBuffer: restBf!)
-            self.config_0_Label.stringValue = "0x\(displayConfig0)"
-            self.config_1_Label.stringValue = "0x\(displayConfig1)"
-            self.config_2_Label.stringValue = "0x\(displayConfig2)"
-            self.config_3_Label.stringValue = "0x\(displayConfig3)"
-        
+            self.updateConfigButtons(restBf: restBf!)
         }
     }
     
@@ -120,15 +145,35 @@ class ViewController: NSViewController {
         
     }
     
+    func updateConfigButtons(restBf:[UInt8]) {
+        for i in 0..<configButtons.count {
+            let displayConfig = ISPCommandTool.toDisplayComfig(readBuffer: restBf, configNum: i)
+            configButtons[i].title = "0x\(displayConfig)"
+        }
+        
+        if(ConfigManager.CONFIG_JSON_DATA != nil){
+            for i in 0..<ConfigManager.CONFIG_JSON_DATA.subConfigSets.count {
+                if(ConfigManager.CONFIG_JSON_DATA.subConfigSets[i].isEnable == true){
+                    configButtons[i].isEnabled = true
+                }else{
+                    configButtons[i].isEnabled = false
+                }
+                
+            }
+        }
+    }
+    
     //更新畫面
     func setView(stase:ViewStase){
         DispatchQueue.main.async {
+            
+            self.ConfigInfo_label.cell?.alignment = .center
             
             switch(stase){
             case .connected:
                 self.EraseAll_Burn_check.isEnabled = true
                 self.RestRun_Burn_Check.isEnabled = true
-//                self.Config_Burn_Check.isEnabled = true
+                //                self.Config_Burn_Check.isEnabled = true
                 self.DataFlash_Burn_Check.isEnabled = self.dataFlashMaxSize != 0
                 self.APROM_Burn_Check.isEnabled = true
                 self.connect_Button.isEnabled = true
@@ -136,11 +181,18 @@ class ViewController: NSViewController {
                 self.Setting_Button.isEnabled = true
                 self.DataFlash_Button.isEnabled = self.dataFlashMaxSize != 0
                 self.APROM_Button.isEnabled = true
+                self.ConfigInfo_label.isHidden = true
+                for button in self.configButtons {
+                    button.isHidden = false
+                }
+                self.configTitle0123.isHidden = false
+                self.ConfigTitle4567.isHidden = false
+                self.ConfigTitle891011.isHidden = false
                 break
             case .startBurn:
                 self.EraseAll_Burn_check.isEnabled = false
                 self.RestRun_Burn_Check.isEnabled = false
-//                self.Config_Burn_Check.isEnabled = false
+                //                self.Config_Burn_Check.isEnabled = false
                 self.DataFlash_Burn_Check.isEnabled = false
                 self.APROM_Burn_Check.isEnabled = false
                 self.connect_Button.isEnabled = false
@@ -152,7 +204,7 @@ class ViewController: NSViewController {
             case .viewDidLoad:
                 self.EraseAll_Burn_check.isEnabled = false
                 self.RestRun_Burn_Check.isEnabled = false
-//                self.Config_Burn_Check.isEnabled = false
+                //                self.Config_Burn_Check.isEnabled = false
                 self.DataFlash_Burn_Check.isEnabled = false
                 self.APROM_Burn_Check.isEnabled = false
                 self.connect_Button.isEnabled = true
@@ -171,21 +223,148 @@ class ViewController: NSViewController {
                     self.Progress.doubleValue = 0
                     self.Progress.startAnimation(nil)
                 }
-                self.config_0_Label.stringValue=""
-                self.config_1_Label.stringValue=""
-                self.config_2_Label.stringValue=""
-                self.config_3_Label.stringValue=""
+                self.Config0.stringValue=""
+                self.Config1.stringValue=""
+                self.Config2.stringValue=""
+                self.Config3.stringValue=""
                 self.nuMkerInfo_Label.stringValue = ""
                 self.DataFlash_File_Label.stringValue = ""
                 self.APROM_File_Label.stringValue = ""
                 self.apromBinData = nil
                 self.dataFlashBinData = nil
+                self.ConfigInfo_label.isHidden = false
+                self.ConfigInfo_label.stringValue = "Config information"
+                for button in self.configButtons {
+                    button.isHidden = true
+                }
+                self.configTitle0123.isHidden = true
+                self.ConfigTitle4567.isHidden = true
+                self.ConfigTitle891011.isHidden = true
+                self.apromBinData = nil
+                self.dataFlashBinData = nil
+                self.APROM_FileData_Text.string = ""
+                self.DataFlash_FileData_Text.string = ""
+                break
+            case .connected_NoConfigJson:
+                self.EraseAll_Burn_check.isEnabled = true
+                self.RestRun_Burn_Check.isEnabled = true
+                //                self.Config_Burn_Check.isEnabled = true
+                self.DataFlash_Burn_Check.isEnabled = self.dataFlashMaxSize != 0
+                self.APROM_Burn_Check.isEnabled = true
+                self.connect_Button.isEnabled = true
+                self.StartBurn_Button.isEnabled = true
+                self.Setting_Button.isEnabled = false
+                self.DataFlash_Button.isEnabled = self.dataFlashMaxSize != 0
+                self.APROM_Button.isEnabled = true
+                self.ConfigInfo_label.isHidden = false
+                for button in self.configButtons {
+                    button.isHidden = true
+                }
+                self.configTitle0123.isHidden = true
+                self.ConfigTitle4567.isHidden = true
+                self.ConfigTitle891011.isHidden = true
                 break
             }
             
         }
     }
+    
+    func isValidHex(_ value: String) -> Bool {
+        let hexRegex = "^0x[0-9A-Fa-f]+$"
+        let hexTest = NSPredicate(format: "SELF MATCHES %@", hexRegex)
+        return hexTest.evaluate(with: value)
+    }
+    
     // MARK: - onClick Methods
+    
+    @IBAction func radioButtonClicked(_ sender: NSButton) {
+        switch sender {
+        case Radio8bits:
+            print("8 bits selected")
+            self.nowRadio = 8
+            
+        case Radio16bits:
+            print("16 bits selected")
+            self.nowRadio = 16
+        case Radio32bits:
+            print("32 bits selected")
+            self.nowRadio = 32
+        default:
+            break
+        }
+        if(apromBinData != nil){
+            self.APROM_FileData_Text.string = HexTool.formatByteArray(data: apromBinData!.toUint8Array, format: self.nowRadio)
+        }
+        if(dataFlashBinData != nil){
+            self.DataFlash_FileData_Text.string = HexTool.formatByteArray(data: dataFlashBinData!.toUint8Array, format: self.nowRadio)
+        }
+    }
+    
+    //Config button Click
+    @IBAction func buttonClicked(_ sender: NSButton) {
+        if let index = configButtons.firstIndex(of: sender) {
+            print("Config \(index) Button clicked")
+            // 處理按鈕點擊事件
+            
+            let alert = NSAlert()
+            alert.messageText = "Enter new config\(index) Hex word"
+            alert.informativeText = "Warning! \nSubmitting this input will directly modify the configuration. \nPlease use with caution!"
+            alert.alertStyle = .informational
+            
+            let inputTextField = NSTextField(frame: NSRect(x: 0, y: 0, width: 200, height: 24))
+            inputTextField.placeholderString = configButtons[index].title
+            inputTextField.stringValue = configButtons[index].title  // 預先填充的內容
+            alert.accessoryView = inputTextField
+            
+            alert.addButton(withTitle: "OK")
+            alert.addButton(withTitle: "Cancel")
+            
+            let response = alert.runModal()
+            if response == .alertFirstButtonReturn {
+                let inputValue = inputTextField.stringValue
+                if isValidHex(inputValue) {
+                    print("Received hex input for Config \(index): \(inputValue)")
+                    // 在這裡處理接收到的 Hex 值
+                    
+                    ISPManager.shared.sendCMD_READ_CONFIG { restBf, isChecksum, isTimeout in
+                        if(restBf == nil){
+                            return
+                        }
+                        
+                        ConfigManager.shared.getConfigArray(readBuffer: restBf!) { configUInts in
+                            
+                            var configs:[UInt] = configUInts
+                            // 去掉 "0x" 前綴
+                            let hexValueString = String(inputValue.dropFirst(2))
+                            // 使用基數 16 進行轉換
+                            let uintValue = UInt(hexValueString, radix: 16)
+                            
+                            configs[index] = uintValue!
+                            
+                            ISPManager.shared.sendCMD_UPDATE_CONFIG(configs: configs) { restBf, isChecksum, isTimeout in
+                                if(restBf == nil){
+                                    //失敗
+                                    return
+                                }
+                                self.updateConfigButtons(restBf: restBf!)
+                            }
+                        }
+                    }
+                    
+                } else {
+                    print("Invalid Hex input")
+                    // 處理無效的 Hex 值
+                    let alert = NSAlert()
+                    alert.messageText = "Invalid Hex Input"
+                    alert.informativeText = "The input you provided is not a valid Hex value. Please enter a valid Hex value."
+                    alert.alertStyle = .warning
+                    alert.addButton(withTitle: "OK")
+                    alert.runModal()
+                }
+            }
+            
+        }
+    }
     
     //Connect button onClick
     @IBAction func BT_connect_onClick(_ sender: NSButton) {
@@ -217,8 +396,6 @@ class ViewController: NSViewController {
                     //非新唐目標版時//isTimeout
                     return
                 }
-                
-                self.setView(stase: .connected)
                 
                 ispManager.sendCMD_GET_DEVICEID { respBf, isChecksum, isTimeout  in
                     
@@ -272,35 +449,36 @@ class ViewController: NSViewController {
                         return
                     }
                     
-                    let displayConfig0 = ISPCommandTool.toDisplayComfig0(readBuffer: restBf!)
-                    let displayConfig1 = ISPCommandTool.toDisplayComfig1(readBuffer: restBf!)
-                    let displayConfig2 = ISPCommandTool.toDisplayComfig2(readBuffer: restBf!)
-                    let displayConfig3 = ISPCommandTool.toDisplayComfig3(readBuffer: restBf!)
-                    self.config_0_Label.stringValue = "0x\(displayConfig0)"
-                    self.config_1_Label.stringValue = "0x\(displayConfig1)"
-                    self.config_2_Label.stringValue = "0x\(displayConfig2)"
-                    self.config_3_Label.stringValue = "0x\(displayConfig3)"
-                    
                     // 讀取config json file
                     let series = self.connectedDeviceData!.chipPdid.series
                     let index = self.connectedDeviceData!.chipPdid.jsonIndex
                     let isLoadSuccess = ConfigManager.shared.readConfigFromFile( series: series, jsonIndex: index)
                     if(isLoadSuccess == false){
-                        self.Setting_Button.isEnabled = false
-                        let failureAlert = NSAlert()
-                        failureAlert.messageText = "Setting functionality is disabled due to 'Failed to read config JSON file.' Please check the file and try again."
-                        failureAlert.informativeText = "File not found"
-                        failureAlert.alertStyle = .warning
-                        failureAlert.addButton(withTitle: "OK")
-                        failureAlert.runModal()
-                        
+                        DispatchQueue.main.async() {
+                            self.setView(stase: .connected_NoConfigJson)
+                            
+                            self.ConfigInfo_label.stringValue = "Config information Not displayed.\nFailed to read config \(series) JSON file."
+                            
+                            let failureAlert = NSAlert()
+                            failureAlert.messageText = "Setting functionality is disabled due to 'Failed to read config JSON file.' Please check the file and try again."
+                            failureAlert.informativeText = "File not found"
+                            failureAlert.alertStyle = .warning
+                            failureAlert.addButton(withTitle: "OK")
+                            failureAlert.runModal()
+                        }
+                        return
+                    }
+                    self.updateConfigButtons(restBf: restBf!)
+                    DispatchQueue.main.async() {
+                        self.setView(stase: .connected)
                     }
                 }
-  
+                
             }
             
         }
     }
+    
     
     @IBAction func APROM_onClick(_ sender: NSButton) {
         let openPanel = NSOpenPanel()
@@ -321,7 +499,7 @@ class ViewController: NSViewController {
                 do {
                     let fileData = try Data(contentsOf: url)
                     self.apromBinData = fileData
-                    self.APROM_FileData_Text.string = fileData.toHexString()
+                    self.APROM_FileData_Text.string = HexTool.formatByteArray(data: fileData.toUint8Array, format: self.nowRadio)
                 } catch {
                     AppDelegate.print("Error reading file: \(error.localizedDescription)")
                 }
@@ -345,7 +523,7 @@ class ViewController: NSViewController {
                     }
                     let fileData = try Data(contentsOf: url)
                     self.dataFlashBinData = fileData
-                    self.DataFlash_FileData_Text.string = fileData.toHexString()
+                    self.DataFlash_FileData_Text.string = HexTool.formatByteArray(data: fileData.toUint8Array, format: self.nowRadio)
                 } catch {
                     AppDelegate.print("Error reading file: \(error.localizedDescription)")
                 }
@@ -441,7 +619,7 @@ class ViewController: NSViewController {
                         return
                     }
                     
-                   
+                    
                 })
             }
             
@@ -505,7 +683,7 @@ class ViewController: NSViewController {
                     }
                 }
             }
-
+            
             DispatchQueue.main.async() {
                 self.ProgressInfo_label.stringValue = "Burn complete."
                 let endTime = Date()// 計算兩者之間的時間差
@@ -517,7 +695,7 @@ class ViewController: NSViewController {
                 Alert.addButton(withTitle: "OK")
                 Alert.runModal()
                 self.setView(stase: .connected)
-//                self.Progress.doubleValue = Double(100)
+                //                self.Progress.doubleValue = Double(100)
             }
             
         }.start()
@@ -536,7 +714,7 @@ class ViewController: NSViewController {
         guard let nobj = notification.object as? NSDictionary else {
             return
         }
-//
+        //
         guard let deviceInfo:HIDDevice = nobj["device"] as? HIDDevice else {
             return
         }
@@ -553,7 +731,7 @@ class ViewController: NSViewController {
         guard let nobj = notification.object as? NSDictionary else {
             return
         }
-
+        
         guard let productId:Int = nobj["productId"] as? Int else {
             return
         }
@@ -579,7 +757,6 @@ class ViewController: NSViewController {
         }
         
     }
-    
     
 }
 

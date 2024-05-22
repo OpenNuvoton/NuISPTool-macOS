@@ -341,10 +341,10 @@ class ISPManager {
         
     }
     
-    func sendCMD_UPDATE_CONFIG(config_0: UInt, config_1: UInt, config_2: UInt, config_3: UInt,callback: @escaping ((_ restBf:[UInt8]?, _ isChecksum:Bool, _ isTimeout:Bool) -> Void)) {
+    func sendCMD_UPDATE_CONFIG(configs: [UInt],callback: @escaping ((_ restBf:[UInt8]?, _ isChecksum:Bool, _ isTimeout:Bool) -> Void)) {
 
         let cmd = ISPCommands.CMD_UPDATE_CONFIG
-        let sendBuffer = ISPCommandTool.toUpdataCongigeCMD(config_0: config_0, config_1: config_1, config_2: config_2, config_3: config_3, packetNumber: ISPManager.PACKET_NUMBER)
+        let sendBuffer = ISPCommandTool.toUpdataCongigeCMD(configs: configs, packetNumber: ISPManager.PACKET_NUMBER)
         ISPManager.connectedDevice!.write(sendBuffer)
 
         let startTime = Date()

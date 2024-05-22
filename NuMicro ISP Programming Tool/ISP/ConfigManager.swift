@@ -15,30 +15,44 @@ class ConfigManager {
     private var TAG = "ConfigManager"
     static var CONFIG_JSON_DATA: IspConfig!
     private static var CONFIG_LIST = [SubConfig]()
-    var BIT_ARRAY_0 = [String?](repeating: "0", count: 32)
-    var BIT_ARRAY_1 = [String?](repeating: "0", count: 32)
-    var BIT_ARRAY_2 = [String?](repeating: "0", count: 32)
-    var BIT_ARRAY_3 = [String?](repeating: "0", count: 32)
+    
+    var BIT_ARRAY: [[String]] = Array(repeating: [String](repeating: "0", count: 32), count: 12)
     
     // 從文件中讀取配置信息並初始化到全局變數 CONFIG_JSON_DATA 中
     func readConfigFromFile(series: String, jsonIndex: String?) -> Bool {
-        // 獲取文檔目錄的路徑
-        var binpath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        // 追加文件名
-        binpath.appendPathComponent("ISPTool/Config/\(series).json")
         
-        // 檢查文件是否存在
-        if FileManager.default.fileExists(atPath: binpath.path) {
-            // 讀取文件內容到 Data 對象
-            let jsonData = try! Data(contentsOf: binpath)
-            // 使用 JSONDecoder 解析 Data 為 IspConfig 對象
-            ConfigManager.CONFIG_JSON_DATA = try! JSONDecoder().decode(IspConfig.self, from: jsonData)
-            return true
+        // 獲取「下載」資料夾路徑
+        var downloadsPath = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
+        // 追加資料夾名稱
+        downloadsPath.appendPathComponent("ISPTool/Config")
+        // 檢查資料夾是否存在，如果不存在則建立
+        if !FileManager.default.fileExists(atPath: downloadsPath.path) {
+            do {
+                try FileManager.default.createDirectory(at: downloadsPath, withIntermediateDirectories: true, attributes: nil)
+                print("資料夾建立成功")
+            } catch {
+                print("無法建立資料夾：\(error)")
+                return false
+            }
         }
         
         // 如果未提供 jsonIndex，則返回 false
         guard let jsonIndex = jsonIndex else {
             return false
+        }
+        
+        // 優先從下載資料夾中讀取 JSON 文件
+        let downloadedJsonUrl = downloadsPath.appendingPathComponent(jsonIndex.lowercased() + ".json")
+        if FileManager.default.fileExists(atPath: downloadedJsonUrl.path) {
+            // 讀取下載資料夾中的 JSON 文件
+            do {
+                let jsonData = try Data(contentsOf: downloadedJsonUrl)
+                ConfigManager.CONFIG_JSON_DATA = try JSONDecoder().decode(IspConfig.self, from: jsonData)
+                return true
+            } catch {
+                print("無法讀取下載資料夾中的 JSON 文件：\(error)")
+                return false
+            }
         }
         
         // 根據 jsonIndex 加載 Bundle 中的 json 文件
@@ -52,9 +66,18 @@ class ConfigManager {
         
         // 使用 JSONDecoder 解析 Data 為 IspConfig 對象
         ConfigManager.CONFIG_JSON_DATA = try! JSONDecoder().decode(IspConfig.self, from: jsonData)
+        
+        // 複製 Bundle 中的 JSON 文件到下載資料夾
+        do {
+            try FileManager.default.copyItem(at: jsonUrl, to: downloadedJsonUrl)
+            print("已成功複製 JSON 文件到下載資料夾")
+        } catch {
+            print("無法複製 JSON 文件到下載資料夾：\(error)")
+        }
+        
         return true
     }
-
+    
     
     func getAllConfigList() -> [SubConfig] {
         ConfigManager.CONFIG_LIST.removeAll()
@@ -69,261 +92,106 @@ class ConfigManager {
     }
     
     /**
-     * 將readBuffer更新到 CONFIG_0123_LIST BIT_ARRAY_0123
+     * 將readBuffer更新到 CONFIG_LIST  ＆  BIT_ARRAY
      */
     func initReadBufferToConfigData(readBuffer: [UInt8]) {
-        let config_0_Array = [readBuffer[8], readBuffer[9], readBuffer[10], readBuffer[11]]
-        let config_1_Array = [readBuffer[12], readBuffer[13], readBuffer[14], readBuffer[15]]
-        let config_2_Array = [readBuffer[16], readBuffer[17], readBuffer[18], readBuffer[19]]
-        let config_3_Array = [readBuffer[20], readBuffer[21], readBuffer[22], readBuffer[23]]
-        
-        // BIT_ARRAY_0 ------------------------------------------------------------------------------
-        // 將bytearray轉換為整數
-        var intValue = config_0_Array.withUnsafeBytes {$0.load(as: UInt32.self)}
-        // 將整數轉換為二進制字串
-        var binaryString = String(intValue, radix: 2)
-        // 將二進制字串填充到 [String?] 陣列中
-        var stringArray = [String?](repeating: "0", count: 32)
-        for (index, char) in binaryString.reversed().enumerated() {
-            stringArray[index] = String(char)
-        }
-        
-        BIT_ARRAY_0 = stringArray
-        
-        for i in 0...31 {
-            for index in 0..<ConfigManager.CONFIG_JSON_DATA.subConfigSets[0].subConfigs.count {
-                var config = ConfigManager.CONFIG_JSON_DATA.subConfigSets[0].subConfigs[index]
-                if config.offset == i {
-                    var values = ""
-                    for l in 1...config.length {
-                        values += stringArray[i+l-1]!
+        for i in 0..<12 {
+            let configArray = [
+                readBuffer[i * 4 + 8],
+                readBuffer[i * 4 + 9],
+                readBuffer[i * 4 + 10],
+                readBuffer[i * 4 + 11]
+            ]
+            
+            var intValue = configArray.withUnsafeBytes { $0.load(as: UInt32.self) }
+            var binaryString = String(intValue, radix: 2)
+            var stringArray = [String](repeating: "0", count: 32)
+            for (index, char) in binaryString.reversed().enumerated() {
+                stringArray[index] = String(char)
+            }
+            
+            BIT_ARRAY[i] = stringArray
+            
+            if(i >= ConfigManager.CONFIG_JSON_DATA.subConfigSets.count){
+                continue
+            }
+            
+            //將respRead值更新到Data
+            for j in 0...31 {
+                for index in 0..<ConfigManager.CONFIG_JSON_DATA.subConfigSets[i].subConfigs.count {
+                    var config = ConfigManager.CONFIG_JSON_DATA.subConfigSets[i].subConfigs[index]
+                    if config.offset == j {
+                        var values = ""
+                        for l in 1...config.length {
+                            values += stringArray[j+l-1]
+                        }
+                        ConfigManager.CONFIG_JSON_DATA.subConfigSets[i].subConfigs[index].values = values
                     }
-                    ConfigManager.CONFIG_JSON_DATA.subConfigSets[0].subConfigs[index].values = values
                 }
             }
         }
         
-        // BIT_ARRAY_1 ------------------------------------------------------------------------------
-        // 將bytearray轉換為整數
-        intValue = config_1_Array.withUnsafeBytes {$0.load(as: UInt32.self)}
-        // 將整數轉換為二進制字串
-        binaryString = String(intValue, radix: 2)
-        // 將二進制字串填充到 [String?] 陣列中
-        stringArray = [String?](repeating: "0", count: 32)
-        for (index, char) in binaryString.reversed().enumerated() {
-            stringArray[index] = String(char)
-        }
-        
-        BIT_ARRAY_1 = stringArray
-        
-        for i in 0...31 {
-            for index in 0..<ConfigManager.CONFIG_JSON_DATA.subConfigSets[1].subConfigs.count {
-                var config = ConfigManager.CONFIG_JSON_DATA.subConfigSets[1].subConfigs[index]
-                if config.offset == i {
-                    var values = ""
-                    for l in 1...config.length {
-                        values += stringArray[i+l-1]!
-                    }
-                    ConfigManager.CONFIG_JSON_DATA.subConfigSets[1].subConfigs[index].values = values
-                }
-            }
-        }
-        // BIT_ARRAY_2 ------------------------------------------------------------------------------
-        // 將bytearray轉換為整數
-        intValue = config_2_Array.withUnsafeBytes {$0.load(as: UInt32.self)}
-        // 將整數轉換為二進制字串
-        binaryString = String(intValue, radix: 2)
-        // 將二進制字串填充到 [String?] 陣列中
-        stringArray = [String?](repeating: "0", count: 32)
-        for (index, char) in binaryString.reversed().enumerated() {
-            stringArray[index] = String(char)
-        }
-        
-        BIT_ARRAY_2 = stringArray
-        
-        for i in 0...31 {
-            for index in 0..<ConfigManager.CONFIG_JSON_DATA.subConfigSets[2].subConfigs.count {
-                var config = ConfigManager.CONFIG_JSON_DATA.subConfigSets[2].subConfigs[index]
-                if config.offset == i {
-                    var values = ""
-                    for l in 1...config.length {
-                        values += stringArray[i+l-1]!
-                    }
-                    ConfigManager.CONFIG_JSON_DATA.subConfigSets[2].subConfigs[index].values = values
-                }
-            }
-        }
-        
-        // BIT_ARRAY_3 ------------------------------------------------------------------------------
-        // 將bytearray轉換為整數
-        intValue = config_3_Array.withUnsafeBytes {$0.load(as: UInt32.self)}
-        // 將整數轉換為二進制字串
-        binaryString = String(intValue, radix: 2)
-        // 將二進制字串填充到 [String?] 陣列中
-        stringArray = [String?](repeating: "0", count: 32)
-        for (index, char) in binaryString.reversed().enumerated() {
-            stringArray[index] = String(char)
-        }
-        
-        BIT_ARRAY_3 = stringArray
-        
-        for i in 0...31 {
-            for index in 0..<ConfigManager.CONFIG_JSON_DATA.subConfigSets[3].subConfigs.count {
-                var config = ConfigManager.CONFIG_JSON_DATA.subConfigSets[3].subConfigs[index]
-                if config.offset == i {
-                    var values = ""
-                    for l in 1...config.length {
-                        values += stringArray[i+l-1]!
-                    }
-                    ConfigManager.CONFIG_JSON_DATA.subConfigSets[3].subConfigs[index].values = values
-                }
-            }
-        }
-        
-        AppDelegate.print("Read Config Binary: \(BIT_ARRAY_0),\n \(BIT_ARRAY_1),\n \(BIT_ARRAY_2),\n \(BIT_ARRAY_3)")
+        AppDelegate.print("Read Config Binary: \(BIT_ARRAY)")
     }
     
-    func getConfigs(configList: [SubConfig],callback: @escaping (_ config0:UInt, _ config1:UInt, _ config2:UInt, _ config3:UInt) -> Void) {
-        var array0 = BIT_ARRAY_0
-        var array1 = BIT_ARRAY_1
-        var array2 = BIT_ARRAY_2
-        var array3 = BIT_ARRAY_3
-        var config0Uint: UInt = 0
-        var config1Uint: UInt = 0
-        var config2Uint: UInt = 0
-        var config3Uint: UInt = 0
-        //config 0 ---------------------------------------------------------------------------------
+    /**
+     * 將readBuffer 轉換成12個 configUInts
+     */
+    func getConfigArray(readBuffer: [UInt8], callback: @escaping (_ configUInts: [UInt]) -> Void) {
+        var configUInts: [UInt] = []
         
-        for i in 0...31 {
-            for setConfig in configList {
-                for oldConfig in ConfigManager.CONFIG_JSON_DATA.subConfigSets[0].subConfigs {
-                    
-                    if (setConfig.offset == i && setConfig.name == oldConfig.name && setConfig.values != oldConfig.values) {
-                        for l in 1...setConfig.length {
-                            let index = setConfig.values.index(setConfig.values.startIndex, offsetBy: l-1)
-                            let value = String(setConfig.values[index])
-                            array0[i+l-1] = value
-                        }
-                    }
-                    
-                }
-            }
+        for i in 0..<12 {
+            let configArray = [
+                readBuffer[i * 4 + 8],
+                readBuffer[i * 4 + 9],
+                readBuffer[i * 4 + 10],
+                readBuffer[i * 4 + 11]
+            ]
+            
+            // 將 bytes 轉換為 UInt32
+            let intValue = configArray.withUnsafeBytes { $0.load(as: UInt32.self) }
+            let configUInt = UInt(intValue)
+            
+            // 將 UInt32 值添加到 configUInts 陣列中
+            configUInts.append(configUInt)
         }
         
-        // 使用二進位轉十進位的方法將字串轉換為 UInt
-        if let convertedUInt = UInt(array0.reversed().compactMap { $0 }.joined(), radix: 2) {
-            config0Uint = convertedUInt
-            AppDelegate.print(String(format: "0x%08X", config0Uint))
-        } else {
-            AppDelegate.print("轉換失敗")
-        }
-
+        // 使用回調傳回 configUInts
+        callback(configUInts)
+    }
     
+    //將list的值轉回[config]陣列（json內有幾個就轉幾個）
+    func getConfigs(configList: [SubConfig], callback: @escaping (_ configUInts: [UInt]) -> Void) {
+        var configUInts: [UInt] = []
         
-        //config 1 ---------------------------------------------------------------------------------
-        for i in 0...31 {
-            for setConfig in configList {
-                for oldConfig in ConfigManager.CONFIG_JSON_DATA.subConfigSets[1].subConfigs {
-                    
-                    if (setConfig.offset == i && setConfig.name == oldConfig.name && setConfig.values != oldConfig.values) {
-                        for l in 1...setConfig.length {
-                            let index = setConfig.values.index(setConfig.values.startIndex, offsetBy: l-1)
-                            let value = String(setConfig.values[index])
-                            array1[i+l-1] = value
+        for i in 0..<ConfigManager.CONFIG_JSON_DATA.subConfigSets.count {
+            var configBits = BIT_ARRAY[ConfigManager.CONFIG_JSON_DATA.subConfigSets[i].index]
+            
+            for j in 0..<32 {
+                for setConfig in configList {
+                    let subConfigs = ConfigManager.CONFIG_JSON_DATA.subConfigSets[i].subConfigs
+                    for oldConfig in subConfigs where setConfig.offset == j && setConfig.name == oldConfig.name && setConfig.values != oldConfig.values {
+                        for k in 1...setConfig.length {
+                            let index = setConfig.values.index(setConfig.values.startIndex, offsetBy: k - 1)
+                            configBits[j + k - 1] = String(setConfig.values[index])
                         }
                     }
-                    
                 }
             }
-        }
-        // 使用二進位轉十進位的方法將字串轉換為 UInt
-        if let convertedUInt = UInt(array1.reversed().compactMap { $0 }.joined(), radix: 2) {
-            config1Uint = convertedUInt
-            AppDelegate.print(String(format: "0x%08X", config1Uint))
-        } else {
-            AppDelegate.print("轉換失敗")
-        }
-
-        //config 2 ---------------------------------------------------------------------------------
-        for i in 0...31 {
-            for setConfig in configList {
-                for oldConfig in ConfigManager.CONFIG_JSON_DATA.subConfigSets[2].subConfigs {
-                    
-                    if (setConfig.offset == i && setConfig.name == oldConfig.name && setConfig.values != oldConfig.values) {
-                        for l in 1...setConfig.length {
-                            let index = setConfig.values.index(setConfig.values.startIndex, offsetBy: l-1)
-                            let value = String(setConfig.values[index])
-                            array2[i+l-1] = value
-                        }
-                    }
-                    
-                }
-            }
-        }
-
-        // 使用二進位轉十進位的方法將字串轉換為 UInt
-        if let convertedUInt = UInt(array2.reversed().compactMap { $0 }.joined(), radix: 2) {
-            config2Uint = convertedUInt
-            AppDelegate.print(String(format: "0x%08X", config2Uint))
-        } else {
-            AppDelegate.print("轉換失敗")
-        }
-
-        //config 3 ---------------------------------------------------------------------------------
-        for i in 0...31 {
-            for setConfig in configList {
-                for oldConfig in ConfigManager.CONFIG_JSON_DATA.subConfigSets[3].subConfigs {
-                    
-                    if (setConfig.offset == i && setConfig.name == oldConfig.name && setConfig.values != oldConfig.values) {
-                        for l in 1...setConfig.length {
-                            let index = setConfig.values.index(setConfig.values.startIndex, offsetBy: l-1)
-                            let value = String(setConfig.values[index])
-                            array3[i+l-1] = value
-                        }
-                    }
-                    
-                }
+            
+            if let convertedUInt = UInt(configBits.reversed().joined(), radix: 2) {
+                configUInts.append(convertedUInt)
+                AppDelegate.print("config:\(String(format: "0x%08X", convertedUInt))")
+            } else {
+                AppDelegate.print("轉換失敗")
             }
         }
         
-        // 使用二進位轉十進位的方法將字串轉換為 UInt
-        if let convertedUInt = UInt(array3.reversed().compactMap { $0 }.joined(), radix: 2) {
-            config3Uint = convertedUInt
-            AppDelegate.print(String(format: "0x%08X", config3Uint))
-        } else {
-            AppDelegate.print("轉換失敗")
-        }
-        // ---------------------------------------------------------------------------------
-//        AppDelegate.print("Config Uint: \(config0Uint), \(config1Uint), \(config2Uint), \(config3Uint)")
-
-
-
-        callback(config0Uint, config1Uint, config2Uint, config3Uint)
+        callback(configUInts)
     }
     
 }
 
-
-//class HEXTool {
-//    static func bytesToUInt(_ bytes: [UInt8]) -> UInt {
-//        var result: UInt = 0
-//        for byte in bytes {
-//            result = (result << 8) + UInt(byte)
-//        }
-//        return result
-//    }
-//
-//    static func UIntTo32bitBinary(_ uint: UInt) -> [Int] {
-//        var bits: [Int] = []
-//        var value = uint
-//        for _ in 0..<32 {
-//            bits.insert(Int(value & 1), at: 0)
-//            value >>= 1
-//        }
-//        return bits
-//    }
-//
-//}
 
 
 

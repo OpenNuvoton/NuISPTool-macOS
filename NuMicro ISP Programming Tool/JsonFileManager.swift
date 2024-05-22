@@ -61,68 +61,140 @@ class JsonFileManager {
     static var CONNECT_CHIP_DATA: ConnectChipData? = nil
     
     func loadChipInfoFile() -> String? {
-        let fileManager = FileManager.default
-        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let fileURL = documentsURL.appendingPathComponent("chip_info.json")
         
-        if fileManager.fileExists(atPath: fileURL.path) {
+        // 獲取「下載」資料夾路徑
+        var downloadsPath = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
+        // 追加資料夾名稱
+        downloadsPath.appendPathComponent("ISPTool/ChipFile")
+        // 檢查資料夾是否存在，如果不存在則建立
+        if !FileManager.default.fileExists(atPath: downloadsPath.path) {
             do {
-                let jsonData = try Data(contentsOf: fileURL)
+                try FileManager.default.createDirectory(at: downloadsPath, withIntermediateDirectories: true, attributes: nil)
+                print("資料夾建立成功")
+            } catch {
+                print("無法建立資料夾：\(error)")
+            }
+        }
+        
+        // 優先從下載資料夾中讀取 JSON 文件
+        let downloadedJsonUrl = downloadsPath.appendingPathComponent("chip_info.json")
+        if FileManager.default.fileExists(atPath: downloadedJsonUrl.path) {
+            do {
+                let jsonData = try Data(contentsOf: downloadedJsonUrl)
                 let json = String(data: jsonData, encoding: .utf8)
                 let chipInfoDatas = try JSONDecoder().decode([ChipInfoData].self, from: jsonData)
                 JsonFileManager._cids = chipInfoDatas
                 return json
             } catch {
-                AppDelegate.print("Error reading file: \(error)")
+                print("Error reading downloaded file: \(error)")
             }
-        } else {
-            if let path = Bundle.main.path(forResource: "chip_info", ofType: "json") {
-                do {
-                    let jsonData = try Data(contentsOf: URL(fileURLWithPath: path))
-                    let json = String(data: jsonData, encoding: .utf8)
-                    let chipInfoDatas = try JSONDecoder().decode([ChipInfoData].self, from: jsonData)
-                    JsonFileManager._cids = chipInfoDatas
-                    return json
-                } catch {
-                    AppDelegate.print("Error reading file: \(error)")
-                }
+        }
+        
+        // 如果下載資料夾中沒有 JSON 文件，則從 Bundle 中讀取 JSON 文件
+        if let path = Bundle.main.path(forResource: "chip_info", ofType: "json") {
+            do {
+                let jsonData = try Data(contentsOf: URL(fileURLWithPath: path))
+                let json = String(data: jsonData, encoding: .utf8)
+                let chipInfoDatas = try JSONDecoder().decode([ChipInfoData].self, from: jsonData)
+                JsonFileManager._cids = chipInfoDatas
+                
+                // 複製 Bundle 中的 JSON 文件到下載資料夾
+                let destinationUrl = downloadsPath.appendingPathComponent("chip_info.json")
+                try FileManager.default.copyItem(at: URL(fileURLWithPath: path), to: destinationUrl)
+                print("已成功複製 JSON 文件到下載資料夾")
+                
+                return json
+            } catch {
+                print("Error reading file from Bundle: \(error)")
+            }
+        }
+        
+        return nil
+    }
+    
+    func loadChipPdidFile() -> String? {
+        
+        // 獲取「下載」資料夾路徑
+        var downloadsPath = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
+        // 追加資料夾名稱
+        downloadsPath.appendPathComponent("ISPTool/ChipFile")
+        // 檢查資料夾是否存在，如果不存在則建立
+        if !FileManager.default.fileExists(atPath: downloadsPath.path) {
+            do {
+                try FileManager.default.createDirectory(at: downloadsPath, withIntermediateDirectories: true, attributes: nil)
+                print("資料夾建立成功")
+            } catch {
+                print("無法建立資料夾：\(error)")
+            }
+        }
+        
+        // 優先從下載資料夾中讀取 JSON 文件
+        let downloadedJsonUrl = downloadsPath.appendingPathComponent("chip_pdid.json")
+        if FileManager.default.fileExists(atPath: downloadedJsonUrl.path) {
+            do {
+                let jsonData = try Data(contentsOf: downloadedJsonUrl)
+                let json = String(data: jsonData, encoding: .utf8)
+                let chipPdidDatas = try JSONDecoder().decode([ChipPdidData].self, from: jsonData)
+                JsonFileManager._cpds = chipPdidDatas
+                return json
+            } catch {
+                print("Error reading downloaded file: \(error)")
+            }
+        }
+        
+        // 如果下載資料夾中沒有 JSON 文件，則從 Bundle 中讀取 JSON 文件
+        if let path = Bundle.main.path(forResource: "chip_pdid", ofType: "json") {
+            do {
+                let jsonData = try Data(contentsOf: URL(fileURLWithPath: path))
+                let json = String(data: jsonData, encoding: .utf8)
+                let chipPdidDatas = try JSONDecoder().decode([ChipPdidData].self, from: jsonData)
+                JsonFileManager._cpds = chipPdidDatas
+                
+                // 複製 Bundle 中的 JSON 文件到下載資料夾
+                let destinationUrl = downloadsPath.appendingPathComponent("chip_pdid.json")
+                try FileManager.default.copyItem(at: URL(fileURLWithPath: path), to: destinationUrl)
+                print("已成功複製 JSON 文件到下載資料夾")
+                
+                return json
+            } catch {
+                print("Error reading file from Bundle: \(error)")
             }
         }
         
         return nil
     }
 
-    func loadChipPdidFile() -> String? {
-        let fileManager = FileManager.default
-        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let fileURL = documentsURL.appendingPathComponent("chip_pdid.json")
-        
-        if fileManager.fileExists(atPath: fileURL.path) {
-            do {
-                let jsonData = try Data(contentsOf: fileURL)
-                let json = String(data: jsonData, encoding: .utf8)
-                let chipInfoDatas = try JSONDecoder().decode([ChipPdidData].self, from: jsonData)
-                JsonFileManager._cpds = chipInfoDatas
-                return json
-            } catch {
-                AppDelegate.print("Error reading file: \(error)")
-            }
-        } else {
-            if let path = Bundle.main.path(forResource: "chip_pdid", ofType: "json") {
-                do {
-                    let jsonData = try Data(contentsOf: URL(fileURLWithPath: path))
-                    let json = String(data: jsonData, encoding: .utf8)
-                    let chipInfoDatas = try JSONDecoder().decode([ChipPdidData].self, from: jsonData)
-                    JsonFileManager._cpds = chipInfoDatas
-                    return json
-                } catch {
-                    AppDelegate.print("Error reading file: \(error)")
-                }
-            }
-        }
-        
-        return nil
-    }
+//    func loadChipPdidFile() -> String? {
+//        let fileManager = FileManager.default
+//        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+//        let fileURL = documentsURL.appendingPathComponent("chip_pdid.json")
+//
+//        if fileManager.fileExists(atPath: fileURL.path) {
+//            do {
+//                let jsonData = try Data(contentsOf: fileURL)
+//                let json = String(data: jsonData, encoding: .utf8)
+//                let chipInfoDatas = try JSONDecoder().decode([ChipPdidData].self, from: jsonData)
+//                JsonFileManager._cpds = chipInfoDatas
+//                return json
+//            } catch {
+//                AppDelegate.print("Error reading file: \(error)")
+//            }
+//        } else {
+//            if let path = Bundle.main.path(forResource: "chip_pdid", ofType: "json") {
+//                do {
+//                    let jsonData = try Data(contentsOf: URL(fileURLWithPath: path))
+//                    let json = String(data: jsonData, encoding: .utf8)
+//                    let chipInfoDatas = try JSONDecoder().decode([ChipPdidData].self, from: jsonData)
+//                    JsonFileManager._cpds = chipInfoDatas
+//                    return json
+//                } catch {
+//                    AppDelegate.print("Error reading file: \(error)")
+//                }
+//            }
+//        }
+//
+//        return nil
+//    }
     
     func saveFile(chipInfoFile: String, chipPdidFile: String) {
         

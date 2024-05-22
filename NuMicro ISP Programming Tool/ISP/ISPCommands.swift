@@ -100,25 +100,28 @@ class ISPCommandTool {
         return deviceIDData.toHexString()
     }
     
-    static func toUpdataCongigeCMD(config_0: UInt, config_1: UInt, config_2: UInt, config_3: UInt, packetNumber: UInt) -> [UInt8] {
+    static func toUpdataCongigeCMD(configs: [UInt], packetNumber: UInt) -> [UInt8] {
 
         let cmdBytes = ISPCommands.CMD_UPDATE_CONFIG.rawValue.UIntTo4Bytes()
         let packetNumberBytes = packetNumber.UIntTo4Bytes()
-        let config0 = config_0.UIntTo4Bytes()
-        let config1 = config_1.UIntTo4Bytes()
-        let config2 = config_2.UIntTo4Bytes()
-        let config3 = config_3.UIntTo4Bytes()
-        let noneBytes: [UInt8] = Array(repeating: 0x00, count: 32)
-
+        
         var sendBytes: [UInt8] = []
         sendBytes += cmdBytes
         sendBytes += packetNumberBytes
-        sendBytes += config0
-        sendBytes += config1
-        sendBytes += config2
-        sendBytes += config3
-        sendBytes += noneBytes
-
+        
+        for config in configs {
+            sendBytes += config.UIntTo4Bytes()
+        }
+        
+        // 計算當前 sendBytes 長度並補足至 64 bytes
+        let currentLength = sendBytes.count
+        if currentLength < 64 {
+            let paddingLength = 64 - currentLength
+            let paddingBytes: [UInt8] = Array(repeating: 0x00, count: paddingLength)
+            sendBytes += paddingBytes
+        }
+        
+        print(sendBytes.toHexString())
         return sendBytes
     }
 
@@ -153,25 +156,32 @@ class ISPCommandTool {
         return sendBytes
     }
 
-    static func toDisplayComfig0(readBuffer: [UInt8]) -> String {
-        let deviceIDArray: [UInt8] = [readBuffer[11], readBuffer[10], readBuffer[9], readBuffer[8]]
+    static func toDisplayComfig(readBuffer: [UInt8], configNum: Int) -> String {
+        let startIdx = 8 + 4 * configNum
+        let deviceIDArray = [readBuffer[startIdx + 3], readBuffer[startIdx + 2], readBuffer[startIdx + 1], readBuffer[startIdx]]
         return deviceIDArray.toHexString()
     }
 
-    static func toDisplayComfig1(readBuffer: [UInt8]) -> String {
-        let deviceIDArray: [UInt8] = [readBuffer[15], readBuffer[14], readBuffer[13], readBuffer[12]]
-        return deviceIDArray.toHexString()
-    }
-
-    static func toDisplayComfig2(readBuffer: [UInt8]) -> String {
-        let deviceIDArray: [UInt8] = [readBuffer[19], readBuffer[18], readBuffer[17], readBuffer[16]]
-        return deviceIDArray.toHexString()
-    }
-
-    static func toDisplayComfig3(readBuffer: [UInt8]) -> String {
-        let deviceIDArray: [UInt8] = [readBuffer[23], readBuffer[22], readBuffer[21], readBuffer[20]]
-        return deviceIDArray.toHexString()
-    }
+    
+//    static func toDisplayComfig0(readBuffer: [UInt8]) -> String {
+//        let deviceIDArray: [UInt8] = [readBuffer[11], readBuffer[10], readBuffer[9], readBuffer[8]]
+//        return deviceIDArray.toHexString()
+//    }
+//
+//    static func toDisplayComfig1(readBuffer: [UInt8]) -> String {
+//        let deviceIDArray: [UInt8] = [readBuffer[15], readBuffer[14], readBuffer[13], readBuffer[12]]
+//        return deviceIDArray.toHexString()
+//    }
+//
+//    static func toDisplayComfig2(readBuffer: [UInt8]) -> String {
+//        let deviceIDArray: [UInt8] = [readBuffer[19], readBuffer[18], readBuffer[17], readBuffer[16]]
+//        return deviceIDArray.toHexString()
+//    }
+//
+//    static func toDisplayComfig3(readBuffer: [UInt8]) -> String {
+//        let deviceIDArray: [UInt8] = [readBuffer[23], readBuffer[22], readBuffer[21], readBuffer[20]]
+//        return deviceIDArray.toHexString()
+//    }
 
 }
 
