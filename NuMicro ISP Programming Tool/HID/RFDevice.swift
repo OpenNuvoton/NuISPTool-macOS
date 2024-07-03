@@ -32,10 +32,9 @@ class RFDevice: NSObject {
         ISPManager.RESP_BUFFER = nil //清除ＢＵＦＦＥＲ
         
         //data to UInt8 array
-        let bytesArray = [UInt8](data)
-        //        let reportId:UInt8 = 2
-        //        bytesArray.insert(reportId, at: 0)
-        //        bytesArray.append(0)// hack every report should end with 0 byte
+        var bytesArray = [UInt8](data)
+        // 修改第二個字節
+        bytesArray[1] = ISPManager.INTERFACE_TYPE.rawValue
         
         if (bytesArray.count > self.deviceInfo.reportSize) {
             AppDelegate.print("Output data too large for USB report")
@@ -59,7 +58,10 @@ class RFDevice: NSObject {
     func write(_ data: [UInt8]) {
         
         ISPManager.RESP_BUFFER = nil //清除ＢＵＦＦＥＲ
-        let bytesArray = data
+        var bytesArray = data
+        
+        // 修改第二個字節
+        bytesArray[1] = ISPManager.INTERFACE_TYPE.rawValue
         
         if bytesArray.count > self.deviceInfo.reportSize {
             AppDelegate.print("Output data too large for USB report")

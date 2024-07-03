@@ -41,7 +41,7 @@ class ISPCommandTool {
     static func toCMD(cmd: ISPCommands, packetNumber: UInt) -> [UInt8] {
         let cmdBytes = cmd.rawValue.UIntTo4Bytes()
         let packetNumberBytes = packetNumber.UIntTo4Bytes()
-        let noneBytes: [UInt8] = Array(repeating: 0x00, count: 48)
+        let noneBytes: [UInt8] = Array(repeating: 0x00, count: 56)
         
         var sendBytes = [UInt8]()
         sendBytes += cmdBytes
@@ -97,7 +97,9 @@ class ISPCommandTool {
             readBuffer[11], readBuffer[10], readBuffer[9], readBuffer[8]
         ]
         let deviceIDData = Data(deviceIDArray)
-        return deviceIDData.toHexString()
+        let byte: UInt8 = readBuffer[8]
+        let data = Data([byte])
+        return data.toHexString()
     }
     
     static func toUpdataCongigeCMD(configs: [UInt], packetNumber: UInt) -> [UInt8] {

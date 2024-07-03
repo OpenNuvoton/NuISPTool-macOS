@@ -7,15 +7,49 @@
 
 import Foundation
 import Cocoa
+import SwiftSerial
+
+enum NulinkInterfaceType {
+    case usb
+    case uart
+    case spi
+    case i2c
+    case rs485
+    case can
+    case wifi
+    case ble
+
+    var rawValue: UInt8 {
+        switch self {
+        case .usb, .uart:
+            return 0x00
+        case .spi:
+            return 0x03
+        case .i2c:
+            return 0x04
+        case .rs485:
+            return 0x05
+        case .can:
+            return 0x06
+        case .wifi:
+            return 0x07
+        case .ble:
+            return 0x08
+        }
+    }
+}
 
 class ISPManager {
     // 單例實例
     static let shared = ISPManager()
     // 連接的設備
     static var connectedDevice: RFDevice? = nil
+    static var connectedSerialDevice: CleanFlightDevice? = nil
+    //interface
+    static var INTERFACE_TYPE : NulinkInterfaceType = .usb
     // packetNumber
     static var PACKET_NUMBER: UInt = 0x00000005
-    private let timeoutInSeconds = 3
+    private let timeoutInSeconds = 8
     static var RESP_BUFFER:Data? = nil
     
     // 私有初始化方法，確保只能從內部創建實例
@@ -68,6 +102,21 @@ class ISPManager {
         ISPManager.PACKET_NUMBER = 0x00000001
         let cmd = ISPCommands.CMD_CONNECT
         let sendBuffer = ISPCommandTool.toCMD(cmd: cmd, packetNumber: ISPManager.PACKET_NUMBER)
+        
+        //UART處理
+        if(ISPManager.INTERFACE_TYPE == .uart){
+
+                var respBf = SerialPortManager.shared.writeForConnect(data: Data(sendBuffer))
+                if(respBf == nil ){
+                    callback(nil, false,true)
+                    return
+                }
+                let isChecksum = self.isChecksum_PackNo(sendBuffer: sendBuffer, readBuffer: respBf?.toUint8Array)
+                callback(respBf, isChecksum,false)
+             
+            return
+        }
+        
         ISPManager.connectedDevice!.write(sendBuffer)
         
         let startTime = Date()
@@ -75,7 +124,6 @@ class ISPManager {
             if Date().timeIntervalSince(startTime) > Double(timeoutInSeconds) {
                 break
             }
-            Thread.sleep(forTimeInterval: 0.1)
         }
         
         if(ISPManager.RESP_BUFFER == nil){
@@ -92,12 +140,18 @@ class ISPManager {
     
     public func sendCMD_GET_DEVICEID(callback: @escaping (_ restBf:[UInt8]?, _ isChecksum:Bool, _ isTimeout:Bool) -> Void) {
         
-        if(ISPManager.connectedDevice == nil){
-            return
-        }
-        
         let cmd = ISPCommands.CMD_GET_DEVICEID
         let sendBuffer = ISPCommandTool.toCMD(cmd: cmd, packetNumber: ISPManager.PACKET_NUMBER)
+        
+        //UART處理
+        if(ISPManager.INTERFACE_TYPE == .uart){
+            
+            SerialPortManager.shared.writeAndRead(data: Data(sendBuffer)) { respBf in
+                let isChecksum = self.isChecksum_PackNo(sendBuffer: sendBuffer, readBuffer: respBf?.toUint8Array)
+                callback(respBf?.toUint8Array, isChecksum , false)
+            }
+            return
+        }
         
         ISPManager.connectedDevice!.write(sendBuffer)
         
@@ -106,7 +160,6 @@ class ISPManager {
             if Date().timeIntervalSince(startTime) > Double(timeoutInSeconds) {
                 break
             }
-            Thread.sleep(forTimeInterval: 0.1)
         }
         
         if(ISPManager.RESP_BUFFER == nil){
@@ -125,6 +178,15 @@ class ISPManager {
         let cmd = ISPCommands.CMD_GET_FWVER
         let sendBuffer = ISPCommandTool.toCMD(cmd: cmd, packetNumber: ISPManager.PACKET_NUMBER)
         
+        //UART處理
+        if(ISPManager.INTERFACE_TYPE == .uart){
+            SerialPortManager.shared.writeAndRead(data: Data(sendBuffer)) { respBf in
+                let isChecksum = self.isChecksum_PackNo(sendBuffer: sendBuffer, readBuffer: respBf?.toUint8Array)
+                callback(respBf?.toUint8Array, isChecksum , false)
+            }
+            return
+        }
+        
         ISPManager.connectedDevice!.write(sendBuffer)
         
         let startTime = Date()
@@ -132,7 +194,6 @@ class ISPManager {
             if Date().timeIntervalSince(startTime) > Double(timeoutInSeconds) {
                 break
             }
-            Thread.sleep(forTimeInterval: 0.1)
         }
         
         if(ISPManager.RESP_BUFFER == nil){
@@ -151,6 +212,15 @@ class ISPManager {
         let cmd = ISPCommands.CMD_ERASE_ALL
         let sendBuffer = ISPCommandTool.toCMD(cmd: cmd, packetNumber: ISPManager.PACKET_NUMBER)
         
+        //UART處理
+        if(ISPManager.INTERFACE_TYPE == .uart){
+            SerialPortManager.shared.writeAndRead(data: Data(sendBuffer)) { respBf in
+                let isChecksum = self.isChecksum_PackNo(sendBuffer: sendBuffer, readBuffer: respBf?.toUint8Array)
+                callback(respBf?.toUint8Array, isChecksum , false)
+            }
+            return
+        }
+        
         ISPManager.connectedDevice!.write(sendBuffer)
         
         let startTime = Date()
@@ -158,7 +228,6 @@ class ISPManager {
             if Date().timeIntervalSince(startTime) > Double(timeoutInSeconds) {
                 break
             }
-            Thread.sleep(forTimeInterval: 0.1)
         }
         
         if(ISPManager.RESP_BUFFER == nil){
@@ -177,6 +246,15 @@ class ISPManager {
         let cmd = ISPCommands.CMD_RUN_APROM
         let sendBuffer = ISPCommandTool.toCMD(cmd: cmd, packetNumber: ISPManager.PACKET_NUMBER)
         
+        //UART處理
+        if(ISPManager.INTERFACE_TYPE == .uart){
+            SerialPortManager.shared.writeAndRead(data: Data(sendBuffer)) { respBf in
+                let isChecksum = self.isChecksum_PackNo(sendBuffer: sendBuffer, readBuffer: respBf?.toUint8Array)
+                callback(respBf?.toUint8Array, isChecksum , false)
+            }
+            return
+        }
+        
         ISPManager.connectedDevice!.write(sendBuffer)
         
         let startTime = Date()
@@ -184,7 +262,6 @@ class ISPManager {
             if Date().timeIntervalSince(startTime) > Double(timeoutInSeconds) {
                 break
             }
-            Thread.sleep(forTimeInterval: 0.1)
         }
         
         if(ISPManager.RESP_BUFFER == nil){
@@ -205,12 +282,6 @@ class ISPManager {
         if cmd != .CMD_UPDATE_APROM && cmd != .CMD_UPDATE_DATAFLASH {
             return
         }
-        
-        //        // 如果是CAN
-        //        if ISPManager.interfaceType == NulinkInterfaceType.CAN {
-        //            self.sendCMD_CAN_UPDATE_BIN(sendByteArray, startAddress, callback: callback)
-        //            return
-        //        }
         
         // 分割資料
         let firstData = sendByteArray.subdata(in: 0..<48) // 第一個 CMD 為 48 byte
@@ -245,14 +316,48 @@ class ISPManager {
         // 寫入第一包資料
         var sendBuffer = ISPCommandTool.toUpdataBin_CMD(cmd: cmd, packetNumber: ISPManager.PACKET_NUMBER, startAddress: startAddress, size: sendByteArray.count, data: firstData, isFirst: true)
         
+        //UART處理
+        if(ISPManager.INTERFACE_TYPE == .uart){
+            SerialPortManager.shared.writeAndRead(data: Data(sendBuffer)) { respBf in
+                let isChecksum = self.isChecksum_PackNo(sendBuffer: sendBuffer, readBuffer: respBf?.toUint8Array)
+                
+                if(isChecksum == false){
+                    callback(nil,true,-1)
+                    return
+                }
+                
+                callback(respBf?.toUint8Array, false , 0)
+                
+                // 寫入剩餘的資料
+                for (i, data) in remainDataList.enumerated() {
+                    sendBuffer = ISPCommandTool.toUpdataBin_CMD(cmd: cmd, packetNumber: ISPManager.PACKET_NUMBER, startAddress: 0x000000, size: sendByteArray.count, data: data, isFirst: false)
+                    
+                    SerialPortManager.shared.writeAndRead(data: Data(sendBuffer)) { respBf in
+                        let isChecksum = self.isChecksum_PackNo(sendBuffer: sendBuffer, readBuffer: respBf?.toUint8Array)
+                        
+                        if(isChecksum == false){
+                            callback(nil,true,-1)
+                            return
+                        }
+                        
+                        let p = Int(Double(i) / Double(remainDataList.count) * 100)
+                        callback(respBf?.toUint8Array, isChecksum , p)
+                    }
+                }
+                // 寫入完成
+                callback(respBf?.toUint8Array, false, 100)
+            }
+            return
+        }
+        
+        //其他介面處理
         ISPManager.connectedDevice!.write(sendBuffer)
         
         let startTime = Date()
         while ISPManager.RESP_BUFFER == nil{
-            if Date().timeIntervalSince(startTime) > Double(5) {
+            if Date().timeIntervalSince(startTime) >   Double(timeoutInSeconds) {
                 break
             }
-            Thread.sleep(forTimeInterval: 0.1)
         }
         
         if(ISPManager.RESP_BUFFER == nil){
@@ -274,6 +379,17 @@ class ISPManager {
         for (i, data) in remainDataList.enumerated() {
             sendBuffer = ISPCommandTool.toUpdataBin_CMD(cmd: cmd, packetNumber: ISPManager.PACKET_NUMBER, startAddress: 0x000000, size: sendByteArray.count, data: data, isFirst: false)
             
+            //UART處理
+            if(ISPManager.INTERFACE_TYPE == .uart){
+                SerialPortManager.shared.writeAndRead(data: Data(sendBuffer)) { respBf in
+                    let isChecksum = self.isChecksum_PackNo(sendBuffer: sendBuffer, readBuffer: respBf?.toUint8Array)
+                    
+                    let p = Int(Double(i) / Double(remainDataList.count) * 100)
+                    callback(respBf?.toUint8Array, isChecksum , p)
+                }
+                continue
+            }
+            
             ISPManager.connectedDevice!.write(sendBuffer)
             
             let startTime = Date()
@@ -281,7 +397,6 @@ class ISPManager {
                 if Date().timeIntervalSince(startTime) > Double(5) {
                     break
                 }
-                Thread.sleep(forTimeInterval: 0.1)
             }
             
             if(ISPManager.RESP_BUFFER == nil){
@@ -319,6 +434,15 @@ class ISPManager {
         let cmd = ISPCommands.CMD_READ_CONFIG
         let sendBuffer = ISPCommandTool.toCMD(cmd: cmd, packetNumber: ISPManager.PACKET_NUMBER)
         
+        //UART處理
+        if(ISPManager.INTERFACE_TYPE == .uart){
+            SerialPortManager.shared.writeAndRead(data: Data(sendBuffer)) { respBf in
+                let isChecksum = self.isChecksum_PackNo(sendBuffer: sendBuffer, readBuffer: respBf?.toUint8Array)
+                callback(respBf?.toUint8Array, isChecksum , false)
+            }
+            return
+        }
+        
         ISPManager.connectedDevice!.write(sendBuffer)
         
         let startTime = Date()
@@ -326,7 +450,6 @@ class ISPManager {
             if Date().timeIntervalSince(startTime) > Double(timeoutInSeconds) {
                 break
             }
-            Thread.sleep(forTimeInterval: 0.1)
         }
         
         if(ISPManager.RESP_BUFFER == nil){
@@ -345,6 +468,16 @@ class ISPManager {
 
         let cmd = ISPCommands.CMD_UPDATE_CONFIG
         let sendBuffer = ISPCommandTool.toUpdataCongigeCMD(configs: configs, packetNumber: ISPManager.PACKET_NUMBER)
+        
+        //UART處理
+        if(ISPManager.INTERFACE_TYPE == .uart){
+            SerialPortManager.shared.writeAndRead(data: Data(sendBuffer)) { respBf in
+                let isChecksum = self.isChecksum_PackNo(sendBuffer: sendBuffer, readBuffer: respBf?.toUint8Array)
+                callback(respBf?.toUint8Array, isChecksum , false)
+            }
+            return
+        }
+        
         ISPManager.connectedDevice!.write(sendBuffer)
 
         let startTime = Date()
@@ -352,7 +485,6 @@ class ISPManager {
             if Date().timeIntervalSince(startTime) > Double(timeoutInSeconds) {
                 break
             }
-            Thread.sleep(forTimeInterval: 0.1)
         }
 
         if(ISPManager.RESP_BUFFER == nil){

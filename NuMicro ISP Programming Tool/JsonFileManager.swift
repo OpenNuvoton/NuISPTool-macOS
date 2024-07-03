@@ -28,20 +28,20 @@ class ConnectChipData {
 }
 
 struct ChipInfoData: Codable {
-    var AP_size: String
-    var DF_size: String
-    var RAM_size: String
-    var DF_address: String
-    var LD_size: String
-    var PDID: String
-    var name: String
+    var AP_size: String?
+    var DF_size: String?
+    var RAM_size: String?
+    var DF_address: String?
+    var LD_size: String?
+    var PDID: String?
+    var name: String?
     var note: String?
 }
 
 struct ChipPdidData: Codable {
-    var name: String
-    var PID: String
-    var series: String
+    var name: String?
+    var PID: String?
+    var series: String?
     var note: String?
     var jsonIndex: String?
 }
@@ -62,14 +62,17 @@ class JsonFileManager {
     
     func loadChipInfoFile() -> String? {
         
-        // 獲取「下載」資料夾路徑
-        var downloadsPath = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
+        // 獲取「文件」資料夾路徑
+        var filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+//        // 獲取「下載」資料夾路徑
+//        var downloadsPath = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
+        
         // 追加資料夾名稱
-        downloadsPath.appendPathComponent("ISPTool/ChipFile")
+        filePath.appendPathComponent("ISPTool/ChipFile")
         // 檢查資料夾是否存在，如果不存在則建立
-        if !FileManager.default.fileExists(atPath: downloadsPath.path) {
+        if !FileManager.default.fileExists(atPath: filePath.path) {
             do {
-                try FileManager.default.createDirectory(at: downloadsPath, withIntermediateDirectories: true, attributes: nil)
+                try FileManager.default.createDirectory(at: filePath, withIntermediateDirectories: true, attributes: nil)
                 print("資料夾建立成功")
             } catch {
                 print("無法建立資料夾：\(error)")
@@ -77,7 +80,7 @@ class JsonFileManager {
         }
         
         // 優先從下載資料夾中讀取 JSON 文件
-        let downloadedJsonUrl = downloadsPath.appendingPathComponent("chip_info.json")
+        let downloadedJsonUrl = filePath.appendingPathComponent("chip_info.json")
         if FileManager.default.fileExists(atPath: downloadedJsonUrl.path) {
             do {
                 let jsonData = try Data(contentsOf: downloadedJsonUrl)
@@ -99,7 +102,7 @@ class JsonFileManager {
                 JsonFileManager._cids = chipInfoDatas
                 
                 // 複製 Bundle 中的 JSON 文件到下載資料夾
-                let destinationUrl = downloadsPath.appendingPathComponent("chip_info.json")
+                let destinationUrl = filePath.appendingPathComponent("chip_info.json")
                 try FileManager.default.copyItem(at: URL(fileURLWithPath: path), to: destinationUrl)
                 print("已成功複製 JSON 文件到下載資料夾")
                 
@@ -114,14 +117,17 @@ class JsonFileManager {
     
     func loadChipPdidFile() -> String? {
         
-        // 獲取「下載」資料夾路徑
-        var downloadsPath = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
+        // 獲取「文件」資料夾路徑
+        var filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+//        // 獲取「下載」資料夾路徑
+//        var downloadsPath = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
+        
         // 追加資料夾名稱
-        downloadsPath.appendPathComponent("ISPTool/ChipFile")
+        filePath.appendPathComponent("ISPTool/ChipFile")
         // 檢查資料夾是否存在，如果不存在則建立
-        if !FileManager.default.fileExists(atPath: downloadsPath.path) {
+        if !FileManager.default.fileExists(atPath: filePath.path) {
             do {
-                try FileManager.default.createDirectory(at: downloadsPath, withIntermediateDirectories: true, attributes: nil)
+                try FileManager.default.createDirectory(at: filePath, withIntermediateDirectories: true, attributes: nil)
                 print("資料夾建立成功")
             } catch {
                 print("無法建立資料夾：\(error)")
@@ -129,7 +135,7 @@ class JsonFileManager {
         }
         
         // 優先從下載資料夾中讀取 JSON 文件
-        let downloadedJsonUrl = downloadsPath.appendingPathComponent("chip_pdid.json")
+        let downloadedJsonUrl = filePath.appendingPathComponent("chip_pdid.json")
         if FileManager.default.fileExists(atPath: downloadedJsonUrl.path) {
             do {
                 let jsonData = try Data(contentsOf: downloadedJsonUrl)
@@ -151,7 +157,7 @@ class JsonFileManager {
                 JsonFileManager._cpds = chipPdidDatas
                 
                 // 複製 Bundle 中的 JSON 文件到下載資料夾
-                let destinationUrl = downloadsPath.appendingPathComponent("chip_pdid.json")
+                let destinationUrl = filePath.appendingPathComponent("chip_pdid.json")
                 try FileManager.default.copyItem(at: URL(fileURLWithPath: path), to: destinationUrl)
                 print("已成功複製 JSON 文件到下載資料夾")
                 

@@ -259,6 +259,8 @@
 				en,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			packageReferences = (
+			);
 			productRefGroup = DEDBA94B77B2D28036E6A35D1CA5C5D7 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";

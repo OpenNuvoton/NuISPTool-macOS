@@ -7,24 +7,15 @@
 
 import Cocoa
 import USBDeviceSwift
-
-enum NulinkInterfaceType: UInt8 {
-    case usb = 0x00
-    // case hid = 0x01 // HID 和 UART 不能同时使用相同的值
-    //    case uart = 0x00
-    case spi = 0x03
-    case i2c = 0x04
-    case rs485 = 0x05
-    case can = 0x06
-    case wifi = 0x07
-    case ble = 0x08
-}
+import SwiftSerial
+import Foundation
 
 enum ViewStase: UInt8 {
     case viewDidLoad = 0
     case startBurn = 1
     case connected = 2
     case connected_NoConfigJson = 3
+    case startConnect = 4
 }
 
 class ViewController: NSViewController {
@@ -80,15 +71,18 @@ class ViewController: NSViewController {
     //    @IBOutlet weak var Config15: NSButton!
     @IBOutlet var configButtons: [NSButton]!
     
+    @IBOutlet weak var Indicator: NSProgressIndicator!
     // MARK: - 宣告
-    var INTERFACE_TYPE : NulinkInterfaceType = .usb
     var devices:[RFDevice] = []
+    var serialDevices:[CleanFlightDevice] = []
     var connectedDeviceData:ConnectChipData? = nil
     var apromBinData : Data? = nil
     var apromMaxSize : Int = 0
     var dataFlashBinData : Data? = nil
     var dataFlashMaxSize : Int = 0
     var nowRadio : Int = 8
+    var isLoadSuccess = false
+    var serialDevicesPath :String? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,14 +98,22 @@ class ViewController: NSViewController {
         self.APROM_FileData_Text.font = NSFont.monospacedSystemFont(ofSize: 12, weight: .regular)
         self.DataFlash_FileData_Text.font = NSFont.monospacedSystemFont(ofSize: 12, weight: .regular)
         
+        // 設置委託
+        self.interfaecType_ComboBox.delegate = self
+        self.scanPort_NSComboBox.delegate = self
+        
         let ispManager = ISPManager.shared
         
         //宣告接收HID事件通知
         NotificationCenter.default.addObserver(self, selector: #selector(self.usbConnected), name: .HIDDeviceConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.usbDisconnected), name: .HIDDeviceDisconnected, object: nil)
         //        NotificationCenter.default.addObserver(self, selector: #selector(self.hidReadData), name: .HIDDeviceDataReceived, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.serialDeviceAdded), name: .SerialDeviceAdded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.serialDeviceRemoved), name: .SerialDeviceRemoved, object: nil)
         // 監聽 MyTabViewControllerClosed 通知
         NotificationCenter.default.addObserver(self, selector: #selector(tabViewClosed), name: NSNotification.Name("MyTabViewClosed"), object: nil)
+        
+        
         
         self.setView(stase: .viewDidLoad)
         
@@ -165,7 +167,8 @@ class ViewController: NSViewController {
     
     //更新畫面
     func setView(stase:ViewStase){
-        DispatchQueue.main.async {
+        
+        DispatchQueue.main.async() {
             
             self.ConfigInfo_label.cell?.alignment = .center
             
@@ -178,7 +181,7 @@ class ViewController: NSViewController {
                 self.APROM_Burn_Check.isEnabled = true
                 self.connect_Button.isEnabled = true
                 self.StartBurn_Button.isEnabled = true
-                self.Setting_Button.isEnabled = true
+                self.Setting_Button.isEnabled = self.isLoadSuccess == true
                 self.DataFlash_Button.isEnabled = self.dataFlashMaxSize != 0
                 self.APROM_Button.isEnabled = true
                 self.ConfigInfo_label.isHidden = true
@@ -188,6 +191,11 @@ class ViewController: NSViewController {
                 self.configTitle0123.isHidden = false
                 self.ConfigTitle4567.isHidden = false
                 self.ConfigTitle891011.isHidden = false
+                self.connect_Button.title = "Disconnect"
+                self.connectState_Label.stringValue = "Connected"
+                self.connectState_Label.textColor = NSColor.systemGreen
+                self.Indicator.isHidden = true
+                
                 break
             case .startBurn:
                 self.EraseAll_Burn_check.isEnabled = false
@@ -197,11 +205,15 @@ class ViewController: NSViewController {
                 self.APROM_Burn_Check.isEnabled = false
                 self.connect_Button.isEnabled = false
                 self.StartBurn_Button.isEnabled = false
-                self.Setting_Button.isEnabled = false
+                self.Setting_Button.isEnabled = self.isLoadSuccess == true
                 self.DataFlash_Button.isEnabled = false
                 self.APROM_Button.isEnabled = false
+                self.Indicator.isHidden = false
+                
                 break
             case .viewDidLoad:
+                self.interfaecType_ComboBox.isEnabled = true
+                self.scanPort_NSComboBox.isEnabled = true
                 self.EraseAll_Burn_check.isEnabled = false
                 self.RestRun_Burn_Check.isEnabled = false
                 //                self.Config_Burn_Check.isEnabled = false
@@ -214,7 +226,7 @@ class ViewController: NSViewController {
                 self.nuMker_Label.stringValue=""
                 ISPManager.connectedDevice = nil
                 self.StartBurn_Button.isEnabled = false
-                self.Setting_Button.isEnabled = false
+                self.Setting_Button.isEnabled = self.isLoadSuccess == true
                 self.DataFlash_Button.isEnabled = false
                 self.APROM_Button.isEnabled = false
                 self.interfaecType_ComboBox?.selectItem(at: 0)
@@ -244,6 +256,8 @@ class ViewController: NSViewController {
                 self.dataFlashBinData = nil
                 self.APROM_FileData_Text.string = ""
                 self.DataFlash_FileData_Text.string = ""
+                self.Indicator.isHidden = true
+                
                 break
             case .connected_NoConfigJson:
                 self.EraseAll_Burn_check.isEnabled = true
@@ -253,7 +267,7 @@ class ViewController: NSViewController {
                 self.APROM_Burn_Check.isEnabled = true
                 self.connect_Button.isEnabled = true
                 self.StartBurn_Button.isEnabled = true
-                self.Setting_Button.isEnabled = false
+                self.Setting_Button.isEnabled = self.isLoadSuccess == true
                 self.DataFlash_Button.isEnabled = self.dataFlashMaxSize != 0
                 self.APROM_Button.isEnabled = true
                 self.ConfigInfo_label.isHidden = false
@@ -263,7 +277,21 @@ class ViewController: NSViewController {
                 self.configTitle0123.isHidden = true
                 self.ConfigTitle4567.isHidden = true
                 self.ConfigTitle891011.isHidden = true
+                self.connect_Button.title = "Disconnect"
+                self.connectState_Label.stringValue = "Connected"
+                self.connectState_Label.textColor = NSColor.systemGreen
+                self.Indicator.isHidden = true
+                
                 break
+            case .startConnect:
+                self.interfaecType_ComboBox.isEnabled = false
+                self.scanPort_NSComboBox.isEnabled = false
+                self.connect_Button.isEnabled = false
+                self.Indicator.isHidden = false
+                self.connectState_Label.stringValue = "Connecting"
+                self.connectState_Label.textColor = NSColor.systemYellow
+                self.Indicator.startAnimation(nil)
+                
             }
             
         }
@@ -366,116 +394,205 @@ class ViewController: NSViewController {
         }
     }
     
+    //open
+    func openUartDevice() -> Bool {
+        
+        if (self.serialDevices.count <= 0 ){
+            return false
+        }
+        
+        let device = self.serialDevices[0]
+        
+        
+        do {
+            try device.openPort(toReceive: true, andTransmit: true)
+        } catch PortError.failedToOpen {
+            //                    self.dialogOK(question: "Error", text: "Serial port \(device.deviceInfo.path) failed to open.")
+        } catch {
+            //                    self.dialogOK(question: "Error", text: "\(error)")
+        }
+        ISPManager.connectedSerialDevice = device //選定連線的 device
+        
+        AppDelegate.print("path:\(String(describing: ISPManager.connectedSerialDevice?.deviceInfo.path))")
+        AppDelegate.print("vendorId:\(String(describing: ISPManager.connectedSerialDevice?.deviceInfo.vendorId))")
+        AppDelegate.print("productId:\(String(describing: ISPManager.connectedSerialDevice?.deviceInfo.productId))")
+        AppDelegate.print("name:\(String(describing: ISPManager.connectedSerialDevice?.deviceInfo.name))")
+        AppDelegate.print("serialNumber:\(String(describing: ISPManager.connectedSerialDevice?.deviceInfo.serialNumber))")
+        AppDelegate.print("vendorName:\(String(describing: ISPManager.connectedSerialDevice?.deviceInfo.vendorName))")
+        self.serialDevicesPath = ISPManager.connectedSerialDevice?.deviceInfo.path
+        
+        if (serialDevicesPath == nil){
+            return false
+        }
+        
+        let serialPortManager = SerialPortManager.shared
+        if serialPortManager.open(portPath: serialDevicesPath!) {
+            print("打開串列裝置\(serialDevicesPath!)")
+            return true
+        } else {
+            print("無法打開串列裝置")
+            return false
+        }
+    }
+    
     //Connect button onClick
     @IBAction func BT_connect_onClick(_ sender: NSButton) {
-        DispatchQueue.main.async {
+  
+        DispatchQueue.global().async {//開新執行緒
             
-            if (self.devices.count <= 0){
-                return
+            // 更新 UI 到 startConnect 狀態
+            self.setView(stase: .startConnect)
+            
+            if(ISPManager.INTERFACE_TYPE == .uart){
+                //如果是UART
+                if (ISPManager.connectedSerialDevice != nil || SerialPortManager.shared.isPortOpen()) {
+                    
+                    ISPManager.connectedSerialDevice = nil
+                    SerialPortManager.shared.close()
+                   
+                    self.setView(stase: .viewDidLoad)
+                    return
+                }
+                
+                let isOpen = self.openUartDevice()
+                if(isOpen == false){
+                    AlertManager.shared.showMsg(title: "Error", msg: "Serial path open failed.", completion: nil)
+                    
+                    self.setView(stase: .viewDidLoad)
+                    
+                    return
+                }
+                
+            }else{
+                //其他HID介面
+                if (self.devices.count <= 0 ){
+                    AlertManager.shared.showMsg(title: "Info", msg: "No connectable Nuvoton Device found.", completion: nil)
+                    self.setView(stase: .viewDidLoad)
+                    return
+                }
+                
+                //已連線的device
+                if( ISPManager.connectedDevice != nil){
+                    self.setView(stase: .viewDidLoad)
+                    return
+                }
+                
+                ISPManager.connectedDevice = self.devices[0] //選定 connected Device
+                for d in self.devices{
+                    if(ISPManager.INTERFACE_TYPE == .i2c || ISPManager.INTERFACE_TYPE == .spi || ISPManager.INTERFACE_TYPE == .rs485 ){
+                        if( d.deviceInfo.productId == 16144){
+                            ISPManager.connectedDevice = d //選定 connected Device
+                            break
+                        }
+                    }
+                    if(ISPManager.INTERFACE_TYPE == .usb  ){
+                        if( d.deviceInfo.productId == 16128){
+                            ISPManager.connectedDevice = d //選定 connected Device
+                            break
+                        }
+                    }
+                }
             }
             
-            if( ISPManager.connectedDevice != nil){
-                self.setView(stase: .viewDidLoad)
-                return
-            }
-            
-            //開始連線
-            self.connect_Button.title = "Disconnect"
-            self.connectState_Label.stringValue = "Connected"
-            self.connectState_Label.textColor = NSColor.systemGreen
-            ISPManager.connectedDevice = self.devices[0] //選定 connected Device
-            
-            
-            //            let data = Data(ISPCommandTool.toCMD(cmd: ISPCommands.CMD_CONNECT, packetNumber: 0))
-            //            ISPManager.connectedDevice?.write(data)
+            //        DispatchQueue.main.async {
             
             let ispManager = ISPManager.shared
             ispManager.sendCMD_CONNECT { respBf, isChecksum, isTimeout in
                 
-                if(respBf == nil || isChecksum == false || isTimeout == true){
+                if(isTimeout == true){
+                    //沒有進入LDROM Timeout
+                    AlertManager.shared.showMsg(title: "Info", msg: "Time Out. Please try resetting to enter LDROM ISP mode.", completion: nil)
+                    self.setView(stase: .viewDidLoad)
+                    return
+                }
+                
+                if(respBf == nil || isChecksum == false){
                     //非新唐目標版時//isTimeout
+                    AlertManager.shared.showMsg(title: "Error", msg: "This HID Device is not a Nuvoton Device, or Checksum failed.", completion: nil)
+                    self.setView(stase: .viewDidLoad)
                     return
                 }
                 
                 ispManager.sendCMD_GET_DEVICEID { respBf, isChecksum, isTimeout  in
                     
-                    if(respBf != nil){
-                        let deviceID = ISPCommandTool.toDeviceID(readBuffer: respBf!)
-                        self.connectedDeviceData = JsonFileManager.shared.getChipInfoByPDID(deviceID: deviceID)
-                        self.nuMker_Label.stringValue = (self.connectedDeviceData?.chipPdid.name)!
-                        self.nuMker_Label.textColor = NSColor.systemGreen
-                        self.nuMkerInfo_Label.stringValue = "APROM：\(self.connectedDeviceData!.chipInfo.AP_size)\nData：\(self.connectedDeviceData!.chipInfo.DF_size)\nFw Ver：unknown"
-                        AppDelegate.print("DEVICEID:\(ISPCommandTool.toDeviceID(readBuffer: respBf!))")
-                        
-                        //apromMaxSize
-                        let AP_size = self.connectedDeviceData!.chipInfo.AP_size
-                        var components = AP_size.components(separatedBy: "*")
-                        if components.count == 2, let firstNumber = Int(components[0]), let secondNumber = Int(components[1]) {
-                            let result = firstNumber * secondNumber
-                            self.apromMaxSize = result
-                        } else {
-                            AppDelegate.print("AP_size Invalid input") // 如果輸入無效，則輸出錯誤信息
-                        }
-                        //dataFlashMaxSize
-                        let DF_size = self.connectedDeviceData!.chipInfo.DF_size
-                        components = DF_size.components(separatedBy: "*")
-                        if components.count == 2, let firstNumber = Int(components[0]), let secondNumber = Int(components[1]) {
-                            let result = firstNumber * secondNumber
-                            self.dataFlashMaxSize = result
-                            if(self.dataFlashMaxSize == 0){
-                                self.DataFlash_Burn_Check.isEnabled = false
-                            }
-                        } else {
-                            AppDelegate.print("DF_size Invalid input") // 如果輸入無效，則輸出錯誤信息
-                        }
-                        
-                    }else{
-                        self.nuMker_Label.stringValue = "unknown Device"
-                        self.nuMker_Label.textColor = NSColor.red
-                    }
-                    AppDelegate.print("sendCMD_GET_DEVICEID:\(respBf?.toHexString()),\(isChecksum)")
-                }
-                
-                ispManager.sendCMD_GET_FWVER { restBf, isChecksum, isTimeout in
-                    if(restBf == nil){
-                        return
-                    }
-                    let fwVer = ISPCommandTool.toFirmwareVersion(readBuffer: restBf!)
-                    self.nuMkerInfo_Label.stringValue = "APROM：\(self.connectedDeviceData!.chipInfo.AP_size)\nData：\(self.connectedDeviceData!.chipInfo.DF_size)\nFw Ver：\(fwVer!)"
-                }
-                
-                ispManager.sendCMD_READ_CONFIG { restBf, isChecksum, isTimeout in
-                    if(restBf == nil){
+                    if(isChecksum == false || respBf == nil){
+                        AlertManager.shared.showMsg(title: "Error", msg: "Get Divice info failed.", completion: nil)
                         return
                     }
                     
-                    // 讀取config json file
-                    let series = self.connectedDeviceData!.chipPdid.series
-                    let index = self.connectedDeviceData!.chipPdid.jsonIndex
-                    let isLoadSuccess = ConfigManager.shared.readConfigFromFile( series: series, jsonIndex: index)
-                    if(isLoadSuccess == false){
-                        DispatchQueue.main.async() {
-                            self.setView(stase: .connected_NoConfigJson)
+                    if(respBf != nil ){
+                        DispatchQueue.main.async {
+                            let deviceID = ISPCommandTool.toDeviceID(readBuffer: respBf!)
+                            self.connectedDeviceData = JsonFileManager.shared.getChipInfoByPDID(deviceID: deviceID)
+                            self.nuMker_Label.stringValue = (self.connectedDeviceData?.chipPdid.name)!
+                            self.nuMker_Label.textColor = NSColor.systemGreen
+                            self.nuMkerInfo_Label.stringValue = "APROM：\(self.connectedDeviceData!.chipInfo.AP_size!)\nData：\(self.connectedDeviceData!.chipInfo.DF_size!)\nFw Ver：unknown"
+                            AppDelegate.print("DEVICEID:\(ISPCommandTool.toDeviceID(readBuffer: respBf!))")
                             
-                            self.ConfigInfo_label.stringValue = "Config information Not displayed.\nFailed to read config \(series) JSON file."
-                            
-                            let failureAlert = NSAlert()
-                            failureAlert.messageText = "Setting functionality is disabled due to 'Failed to read config JSON file.' Please check the file and try again."
-                            failureAlert.informativeText = "File not found"
-                            failureAlert.alertStyle = .warning
-                            failureAlert.addButton(withTitle: "OK")
-                            failureAlert.runModal()
+                            //apromMaxSize
+                            let AP_size = self.connectedDeviceData!.chipInfo.AP_size
+                            var components = AP_size!.components(separatedBy: "*")
+                            if components.count == 2, let firstNumber = Int(components[0]), let secondNumber = Int(components[1]) {
+                                let result = firstNumber * secondNumber
+                                self.apromMaxSize = result
+                            } else {
+                                AppDelegate.print("AP_size Invalid input") // 如果輸入無效，則輸出錯誤信息
+                            }
+                            //dataFlashMaxSize
+                            let DF_size = self.connectedDeviceData!.chipInfo.DF_size
+                            components = DF_size!.components(separatedBy: "*")
+                            if components.count == 2, let firstNumber = Int(components[0]), let secondNumber = Int(components[1]) {
+                                let result = firstNumber * secondNumber
+                                self.dataFlashMaxSize = result
+                                if(self.dataFlashMaxSize == 0){
+                                    self.DataFlash_Burn_Check.isEnabled = false
+                                }
+                            } else {
+                                AppDelegate.print("DF_size Invalid input") // 如果輸入無效，則輸出錯誤信息
+                            }
                         }
-                        return
+                    }else{
+                        DispatchQueue.main.async {
+                            self.nuMker_Label.stringValue = "unknown Device"
+                            self.nuMker_Label.textColor = NSColor.red
+                        }
                     }
-                    self.updateConfigButtons(restBf: restBf!)
-                    DispatchQueue.main.async() {
-                        self.setView(stase: .connected)
+                    AppDelegate.print("sendCMD_GET_DEVICEID:\(respBf?.toHexString()),\(isChecksum)")
+                    
+                    ispManager.sendCMD_GET_FWVER { restBf, isChecksum, isTimeout in
+                        if(restBf == nil){
+                            AlertManager.shared.showMsg(title: "Error", msg: "Get FW Ver failed.", completion: nil)
+                            return
+                        }
+                        DispatchQueue.main.async {
+                            let fwVer = ISPCommandTool.toFirmwareVersion(readBuffer: restBf!)
+                            self.nuMkerInfo_Label.stringValue = "APROM：\(self.connectedDeviceData!.chipInfo.AP_size!)\nData：\(self.connectedDeviceData!.chipInfo.DF_size!)\nFw Ver：\(fwVer!)"
+                        }
+                        
+                        ispManager.sendCMD_READ_CONFIG { restBf, isChecksum, isTimeout in
+                            if(restBf == nil){
+                                AlertManager.shared.showMsg(title: "Error", msg: "Read congif failed.", completion: nil)
+                                return
+                            }
+                            
+                            // 讀取config json file
+                            let series = self.connectedDeviceData!.chipPdid.series
+                            let index = self.connectedDeviceData!.chipPdid.jsonIndex
+                            self.isLoadSuccess = ConfigManager.shared.readConfigFromFile( series: series!, jsonIndex: index)
+                            if(self.isLoadSuccess == false){
+                                self.setView(stase: .connected_NoConfigJson)
+                                DispatchQueue.main.async() {
+                                    self.ConfigInfo_label.stringValue = "Config information Not displayed.\nFailed to read config \(series!) JSON file."
+                                    AlertManager.shared.showMsg(title: "Info", msg: "Setting functionality is disabled due to 'Failed to read config JSON file.' Please check the file and try again.")
+                                }
+                                return
+                            }
+                            self.updateConfigButtons(restBf: restBf!)
+                            self.setView(stase: .connected)
+                        }
                     }
                 }
-                
             }
-            
         }
     }
     
@@ -694,7 +811,11 @@ class ViewController: NSViewController {
                 Alert.alertStyle = .informational
                 Alert.addButton(withTitle: "OK")
                 Alert.runModal()
-                self.setView(stase: .connected)
+                if(self.isLoadSuccess){
+                    self.setView(stase: .connected)
+                }else{
+                    self.setView(stase: .connected_NoConfigJson)
+                }
                 //                self.Progress.doubleValue = Double(100)
             }
             
@@ -755,8 +876,138 @@ class ViewController: NSViewController {
                 }
             }
         }
+    }
+    
+    // 找到 Serial Device 通知
+    @objc func serialDeviceAdded(notification: NSNotification) {
+        guard let nobj = notification.object as? NSDictionary else {
+            return
+        }
         
+        guard let deviceInfo:SerialDevice = nobj["device"] as? SerialDevice else {
+            return
+        }
+        let device = CleanFlightDevice(deviceInfo)
+        DispatchQueue.main.async {
+            self.serialDevices.append(device)
+            self.scanPort_NSComboBox.reloadData()
+        }
+    }
+    
+    // Serial Device 斷線通知
+    @objc func serialDeviceRemoved(notification: NSNotification) {
+        guard let nobj = notification.object as? NSDictionary else {
+            return
+        }
+        
+        guard let deviceInfo:SerialDevice = nobj["device"] as? SerialDevice else {
+            return
+        }
+        DispatchQueue.main.async {
+            if let index = self.serialDevices.index(where: { $0.deviceInfo.path == deviceInfo.path }) {
+                self.serialDevices.remove(at: index)
+                if (deviceInfo.path == ISPManager.connectedSerialDevice?.deviceInfo.path) {
+                    
+                    AlertManager.shared.showMsg(title: "Info", msg: "serial Device is Removed")
+                    ISPManager.connectedSerialDevice = nil
+                    ISPManager.connectedSerialDevice?.closePort()
+                    SerialPortManager.shared.close()
+                }
+            }
+            self.scanPort_NSComboBox.reloadData()
+        }
+        self.setView(stase: .viewDidLoad)
     }
     
 }
 
+extension ViewController: NSComboBoxDelegate,NSComboBoxDataSource {
+    
+    // NSComboBoxDelegate 方法
+    func comboBoxSelectionDidChange(_ notification: Notification) {
+        
+        if notification.object as? NSComboBox == interfaecType_ComboBox {
+            let selectedIndex = interfaecType_ComboBox.indexOfSelectedItem
+            if selectedIndex == 0 {
+                scanPort_NSComboBox.removeAllItems()
+                scanPort_NSComboBox.addItems(withObjectValues: [""])
+                self.scanPort_NSComboBox?.selectItem(at: 0)
+                scanPort_NSComboBox.isEnabled = false
+                
+                updateConnectedDevice(interFace: .usb)
+            }
+            if selectedIndex == 1 {
+                
+                scanPort_NSComboBox.isEnabled = true
+                scanPort_NSComboBox.removeAllItems()
+                scanPort_NSComboBox.addItems(withObjectValues: ["SPI", "I2C", "RS485"])
+                self.scanPort_NSComboBox?.selectItem(at: 0)
+                updateConnectedDevice(interFace: .spi)
+            }
+            if selectedIndex == 2 {
+                
+                scanPort_NSComboBox.isEnabled = true
+                scanPort_NSComboBox.removeAllItems()
+                scanPort_NSComboBox.addItems(withObjectValues: ["UART"])
+                self.scanPort_NSComboBox?.selectItem(at: 0)
+                updateConnectedDevice(interFace: .uart)
+            }
+        }
+        
+        if notification.object as? NSComboBox == scanPort_NSComboBox {
+            let interFaceIndex = interfaecType_ComboBox.indexOfSelectedItem
+            let selectedIndex = scanPort_NSComboBox.indexOfSelectedItem
+            if interFaceIndex == 1  {
+                if selectedIndex == 0  {
+                    updateConnectedDevice(interFace: .spi)
+                }
+                if selectedIndex == 1 {
+                    updateConnectedDevice(interFace: .i2c)
+                }
+                if selectedIndex == 2 {
+                    updateConnectedDevice(interFace: .rs485)
+                }
+            }
+        }
+        
+    }
+    
+    // 更新 updateConnectedDevice
+    func updateConnectedDevice(interFace:NulinkInterfaceType) {
+        switch(interFace){
+            
+        case .usb:
+            AppDelegate.print("interface: usb")
+            ISPManager.INTERFACE_TYPE = .usb
+            break
+        case .spi:
+            AppDelegate.print("interface: spi")
+            ISPManager.INTERFACE_TYPE = .spi
+            break
+        case .i2c:
+            AppDelegate.print("interface: i2c")
+            ISPManager.INTERFACE_TYPE = .i2c
+            break
+        case .rs485:
+            AppDelegate.print("interface: rs485")
+            ISPManager.INTERFACE_TYPE = .rs485
+            break
+        case .can:
+            AppDelegate.print("interface: can")
+            ISPManager.INTERFACE_TYPE = .can
+            break
+        case .wifi:
+            AppDelegate.print("interface: wifi")
+            ISPManager.INTERFACE_TYPE = .wifi
+            break
+        case .ble:
+            AppDelegate.print("interface: ble")
+            ISPManager.INTERFACE_TYPE = .ble
+            break
+        case .uart:
+            AppDelegate.print("interface: uart")
+            ISPManager.INTERFACE_TYPE = .uart
+            break
+        }
+    }
+}
