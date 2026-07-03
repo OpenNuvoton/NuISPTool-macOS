@@ -41,3 +41,7 @@ Version 1.0.1 currently only supports the HID interface.
 10. Wait for the burning process to complete.<br>
 
 <img src="https://github.com/OpenNuvoton/NuISPTool-macOS/blob/main/1714987513023.jpg?raw=true" alt="Logo" style="width: 400px;">
+
+## License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
